@@ -67,20 +67,6 @@ for ndx_probe in ndx_probes:
     pi_probes.append(pi_probe)
 ```
 
-## Ongoing work
-- Publish on PyPI
-- Incorporate this NDX into the core NWB schema via [NWBEP002](https://docs.google.com/document/d/1q-haFEEHEgZpRoCzzQsuSWCKN4QfMsTzLnlptLaf-yw/edit)
-
-## Future plans
-- Add information about the headstage used for data acquisition
-
----
-This extension was created using [ndx-template](https://github.com/nwb-extensions/ndx-template).
-=======
-# ndx-extracellular-channels
-
-
-
 ## Diagram
 
 
@@ -189,3 +175,13 @@ classDiagram
     ChannelsTable *--> ProbeInsertion: might contain ProbeInsertion
     note for ChannelsTable "ChannelsTable is no longer global"
 ```
+
+## Ongoing work
+- Publish on PyPI
+- Incorporate this NDX into the core NWB schema via [NWBEP002](https://docs.google.com/document/d/1q-haFEEHEgZpRoCzzQsuSWCKN4QfMsTzLnlptLaf-yw/edit)
+
+## Future plans
+- Add information about the headstage used for data acquisition
+
+---
+This extension was created using [ndx-template](https://github.com/nwb-extensions/ndx-template).
