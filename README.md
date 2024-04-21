@@ -137,7 +137,7 @@ classDiagram
                 <<Not sure what type>>
 
                 name : str
-                manufactuer : str
+                manufacturer : str
                 model : str
                 contour : List[Tuple[float, float], Tuple[float, float, float]]
                 contact_table : ContactsTable
@@ -151,7 +151,7 @@ classDiagram
                 --------------------------------------
                 name : str
                 description : str
-                
+
                 --------------------------------------
                 columns
                 --------------------------------------
@@ -163,7 +163,7 @@ classDiagram
             }
     }
 
- 
+
 
     ExtracellularSeries ..> ChannelsTable : links with channels
     ProbeModel *--> ContactTable : contains

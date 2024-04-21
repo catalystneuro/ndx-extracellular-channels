@@ -42,76 +42,11 @@ def main():
     )
     ns_builder.include_namespace("core")
 
-    probe_insertion = NWBGroupSpec(
-        neurodata_type_def="ProbeInsertion",
-        neurodata_type_inc="NWBContainer",
-        doc=(
-            "Metadata about the insertion of a probe into the brain, which can be used to determine the location of "
-            "the probe in the brain."
-        ),
-        attributes=[
-            # TODO waiting on https://github.com/hdmf-dev/hdmf/issues/1099 to add these attributes
-            # NWBAttributeSpec(
-            #     name="insertion_position_in_mm",
-            #     doc=("Stereotactic coordinates (AP, ML, DV) of where the probe was inserted, in millimeters. "
-            #          "AP = anteroposterior coordinate in mm (+ is anterior). "
-            #          "ML = mediolateral coordinate in mm (+ is right). "
-            #          "DV = dorsoventral coordinate in mm (+ is up)."
-            #          "Coordinates are relative to `reference`"),
-            #     dtype=[
-            #         NWBDtypeSpec(name="ap", dtype="float", doc="Anteroposterior coordinate in mm, relative to `reference` (+ is anterior).",),
-            #         NWBDtypeSpec(name="ml", dtype="float", doc="Mediolateral coordinate in mm, relative to `reference` (+ is right).",),
-            #         NWBDtypeSpec(name="dv", dtype="float", doc="Dorsoventral coordinate in mm, relative to `reference` (+ is up).",),
-            #     ],
-            #     required=False,
-            # ),
-            NWBAttributeSpec(
-                name="reference",
-                doc=(
-                    "Reference point for `insertion_position_in_mm` coordinates, e.g., "
-                    '"bregma at the cortical surface".'
-                ),
-                dtype="text",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="hemisphere",  # TODO this is useful to cache but could be done at the API level
-                doc=(
-                    'The hemisphere ("left" or "right") of the targeted location of the optogenetic stimulus site. '
-                    "Should be consistent with `insertion_position_in_mm.ml` coordinate (left = ml < 0, right = ml > 0)."
-                ),
-                dtype="text",
-                required=False,
-            ),
-            # NWBAttributeSpec(
-            #     name="insertion_angle_in_deg",
-            #     doc=("The angles (pitch, yaw, roll) of the probe at the time of insertion, in degrees. "
-            #          "Pitch = rotation around left-right axis, like nodding (+ is rotating the nose upward). "
-            #          "Yaw = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward). "
-            #          "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side downward). "),
-            #     dtype=[
-            #         NWBDtypeSpec(name="pitch", dtype="float", doc="Rotation around left-right axis, like nodding (+ is rotating the nose upward)."),
-            #         NWBDtypeSpec(name="yaw", dtype="float", doc="Rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward)."),
-            #         NWBDtypeSpec(name="roll", dtype="float", doc="Rotation around anterior-posterior axis, like tilting (+ is rotating the right side downward)."),
-            #     ],
-            #     required=False,
-            # ),
-            NWBAttributeSpec(
-                name="depth_in_mm",
-                doc=(
-                    "Depth that the probe was driven along `insertion_angle` starting from "
-                    "`insertion_position_in_mm`, in millimeters."
-                ),
-                dtype="float",
-                required=False,
-            ),
-        ],
-    )
-
     contacts_table = NWBGroupSpec(
         neurodata_type_def="ContactsTable",
         neurodata_type_inc="DynamicTable",
         doc="Metadata about the contacts of a probe, compatible with the ProbeInterface specification.",
+        default_name="contacts_table",
         datasets=[
             NWBDatasetSpec(
                 name="relative_position",
@@ -124,7 +59,8 @@ def main():
                     NWBAttributeSpec(
                         name="reference",
                         doc=(
-                            "Reference point for the relative position coordinates and information about the coordinate system used."
+                            "Reference point for the relative position coordinates and information about the "
+                            "coordinate system used."
                         ),
                         dtype="text",
                         required=False,  # TODO should this be required?
@@ -155,7 +91,8 @@ def main():
                 name="contact_plane_axes",
                 neurodata_type_inc="VectorData",
                 doc=(
-                    "The axes defining the contact plane. See https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."
+                    "The axes defining the contact plane. "
+                    "See https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."
                 ),
                 dtype="float",
                 dims=[["num_contacts", "v1, v2", "x, y"], ["num_contacts", "v1, v2", "x, y, z"]],
@@ -163,23 +100,23 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="radius",
+                name="radius_in_um",
                 neurodata_type_inc="VectorData",
-                doc="Radius of a circular contact.",
+                doc="Radius of a circular contact, in micrometers.",
                 dtype="float",
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="width",
+                name="width_in_um",
                 neurodata_type_inc="VectorData",
-                doc="Width of a rectangular or square contact.",
+                doc="Width of a rectangular or square contact, in micrometers.",
                 dtype="float",
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="height",
+                name="height_in_um",
                 neurodata_type_inc="VectorData",
-                doc="Height of a rectangular contact.",
+                doc="Height of a rectangular contact, in micrometers.",
                 dtype="float",
                 quantity="?",
             ),
@@ -249,6 +186,106 @@ def main():
                 name="model_name",
                 doc="model of the probe; e.g. 'Neuropixels 1.0'",
                 dtype="text",
+            ),  # TODO is this redundant? There should not be more than 1 ProbeModel object got a given model_name
+        ],
+    )
+
+    probe_insertion = NWBGroupSpec(
+        neurodata_type_def="ProbeInsertion",
+        neurodata_type_inc="NWBContainer",
+        doc=(
+            "Metadata about the insertion of a probe into the brain, which can be used to determine the location of "
+            "the probe in the brain."
+        ),
+        default_name="probe_insertion",
+        attributes=[
+            # TODO waiting on https://github.com/hdmf-dev/hdmf/issues/1099 to add these attributes
+            # NWBAttributeSpec(
+            #     name="insertion_position_in_mm",
+            #     doc=(
+            #         "Stereotactic coordinates (AP, ML, DV) of where the probe was inserted, in millimeters. "
+            #         "AP = anteroposterior coordinate in mm (+ is anterior). "
+            #         "ML = mediolateral coordinate in mm (+ is right). "
+            #         "DV = dorsoventral coordinate in mm (+ is up)."
+            #         "Coordinates are relative to `reference`"
+            #     ),
+            #     dtype=[
+            #         NWBDtypeSpec(
+            #             name="ap",
+            #             dtype="float",
+            #             doc="Anteroposterior coordinate in mm, relative to `reference` (+ is anterior).",
+            #         ),
+            #         NWBDtypeSpec(
+            #             name="ml",
+            #             dtype="float",
+            #             doc="Mediolateral coordinate in mm, relative to `reference` (+ is right).",
+            #         ),
+            #         NWBDtypeSpec(
+            #             name="dv",
+            #             dtype="float",
+            #             doc="Dorsoventral coordinate in mm, relative to `reference` (+ is up).",
+            #         ),
+            #     ],
+            #     required=False,
+            # ),
+            NWBAttributeSpec(
+                name="reference",
+                doc=(
+                    "Reference point for `insertion_position_in_mm` coordinates, e.g., "
+                    '"bregma at the cortical surface".'
+                ),
+                dtype="text",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="hemisphere",  # TODO this is useful to cache but could be done at the API level
+                doc=(
+                    'The hemisphere ("left" or "right") of the targeted location of the optogenetic stimulus site. '
+                    "Should be consistent with `insertion_position_in_mm.ml` coordinate (left = ml < 0, "
+                    "right = ml > 0)."
+                ),
+                dtype="text",
+                required=False,
+            ),
+            # NWBAttributeSpec(
+            #     name="insertion_angle_in_deg",
+            #     doc=(
+            #         "The angles (pitch, yaw, roll) of the probe at the time of insertion, in degrees. "
+            #         "Pitch = rotation around left-right axis, like nodding (+ is rotating the nose upward). "
+            #         "Yaw = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward). "
+            #         "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
+            #         "downward). "
+            #     ),
+            #     dtype=[
+            #         NWBDtypeSpec(
+            #             name="pitch",
+            #             dtype="float",
+            #             doc="Rotation around left-right axis, like nodding (+ is rotating the nose upward).",
+            #         ),
+            #         NWBDtypeSpec(
+            #             name="yaw",
+            #             dtype="float",
+            #             doc="Rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward).",
+            #         ),
+            #         NWBDtypeSpec(
+            #             name="roll",
+            #             dtype="float",
+            #             doc=(
+            #                 "Rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
+            #                 "downward)."
+            #             ),
+            #         ),
+            #     ],
+            #     required=False,
+            # ),
+            NWBAttributeSpec(
+                name="depth_in_mm",
+                doc=(
+                    "Depth that the probe was driven along `insertion_angle` starting from "
+                    "`insertion_position_in_mm`, in millimeters."
+                ),
+                dtype="float",
+                required=False,
             ),
         ],
     )
@@ -257,6 +294,7 @@ def main():
         neurodata_type_def="ChannelsTable",
         neurodata_type_inc="DynamicTable",
         doc="Metadata about the channels used in an extracellular recording from a single probe.",
+        default_name="ChannelsTable",
         groups=[
             NWBGroupSpec(
                 name="probe_insertion",
@@ -425,10 +463,10 @@ def main():
                 ],
             ),
             NWBDatasetSpec(
-                name="contacts",
+                name="channels",
                 neurodata_type_inc="DynamicTableRegion",
                 doc=(
-                    "DynamicTableRegion pointer to rows in a ContactsTable that represent the channels used to "
+                    "DynamicTableRegion pointer to rows in a ChannelsTable that represent the channels used to "
                     "collect the data in this recording."
                 ),
             ),
@@ -463,7 +501,7 @@ def main():
         ],
     )
 
-    new_data_types = [probe_insertion, contacts_table, probe_model, probe, channels_table, extracellular_series]
+    new_data_types = [contacts_table, probe_model, probe, probe_insertion, channels_table, extracellular_series]
 
     # export the spec to yaml files in the spec folder
     output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "spec"))

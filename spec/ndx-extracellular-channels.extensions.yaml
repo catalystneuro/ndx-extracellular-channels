@@ -1,27 +1,7 @@
 groups:
-- neurodata_type_def: ProbeInsertion
-  neurodata_type_inc: NWBContainer
-  doc: Metadata about the insertion of a probe into the brain, which can be used to
-    determine the location of the probe in the brain.
-  attributes:
-  - name: reference
-    dtype: text
-    doc: Reference point for `insertion_position_in_mm` coordinates, e.g., "bregma
-      at the cortical surface".
-    required: false
-  - name: hemisphere
-    dtype: text
-    doc: The hemisphere ("left" or "right") of the targeted location of the optogenetic
-      stimulus site. Should be consistent with `insertion_position_in_mm.ml` coordinate
-      (left = ml < 0, right = ml > 0).
-    required: false
-  - name: depth_in_mm
-    dtype: float
-    doc: Depth that the probe was driven along `insertion_angle` starting from `insertion_position_in_mm`,
-      in millimeters.
-    required: false
 - neurodata_type_def: ContactsTable
   neurodata_type_inc: DynamicTable
+  default_name: contacts_table
   doc: Metadata about the contacts of a probe, compatible with the ProbeInterface
     specification.
   datasets:
@@ -79,20 +59,20 @@ groups:
     doc: The axes defining the contact plane. See https://probeinterface.readthedocs.io/en/main/format_spec.html
       for more details.
     quantity: '?'
-  - name: radius
+  - name: radius_in_um
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Radius of a circular contact.
+    doc: Radius of a circular contact, in micrometers.
     quantity: '?'
-  - name: width
+  - name: width_in_um
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Width of a rectangular or square contact.
+    doc: Width of a rectangular or square contact, in micrometers.
     quantity: '?'
-  - name: height
+  - name: height_in_um
     neurodata_type_inc: VectorData
     dtype: float
-    doc: Height of a rectangular contact.
+    doc: Height of a rectangular contact, in micrometers.
     quantity: '?'
   - name: device_channel_index_pi
     neurodata_type_inc: VectorData
@@ -151,8 +131,31 @@ groups:
   - name: probe_model
     target_type: ProbeModel
     doc: The model of the probe used to record the data.
+- neurodata_type_def: ProbeInsertion
+  neurodata_type_inc: NWBContainer
+  default_name: probe_insertion
+  doc: Metadata about the insertion of a probe into the brain, which can be used to
+    determine the location of the probe in the brain.
+  attributes:
+  - name: reference
+    dtype: text
+    doc: Reference point for `insertion_position_in_mm` coordinates, e.g., "bregma
+      at the cortical surface".
+    required: false
+  - name: hemisphere
+    dtype: text
+    doc: The hemisphere ("left" or "right") of the targeted location of the optogenetic
+      stimulus site. Should be consistent with `insertion_position_in_mm.ml` coordinate
+      (left = ml < 0, right = ml > 0).
+    required: false
+  - name: depth_in_mm
+    dtype: float
+    doc: Depth that the probe was driven along `insertion_angle` starting from `insertion_position_in_mm`,
+      in millimeters.
+    required: false
 - neurodata_type_def: ChannelsTable
   neurodata_type_inc: DynamicTable
+  default_name: ChannelsTable
   doc: Metadata about the channels used in an extracellular recording from a single
     probe.
   attributes:
@@ -263,9 +266,9 @@ groups:
         to 'volts'. Actual stored values are not necessarily stored in these units.
         To access the data in these units, multiply 'data' by 'conversion', followed
         by 'channel_conversion' (if present), and then add 'offset'.
-  - name: contacts
+  - name: channels
     neurodata_type_inc: DynamicTableRegion
-    doc: DynamicTableRegion pointer to rows in a ContactsTable that represent the
+    doc: DynamicTableRegion pointer to rows in a ChannelsTable that represent the
       channels used to collect the data in this recording.
   - name: channel_conversion
     dtype: float
