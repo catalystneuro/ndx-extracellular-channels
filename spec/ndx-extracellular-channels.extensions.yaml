@@ -5,7 +5,7 @@ groups:
   doc: Metadata about the contacts of a probe, compatible with the ProbeInterface
     specification.
   datasets:
-  - name: relative_position
+  - name: relative_position_in_mm
     neurodata_type_inc: VectorData
     dtype: float
     dims:
@@ -18,7 +18,7 @@ groups:
       - 2
     - - null
       - 3
-    doc: Relative position of the contact
+    doc: Relative position of the contact in millimeters, relative to `reference`.
     attributes:
     - name: reference
       dtype: text
@@ -179,7 +179,7 @@ groups:
     doc: The filter used on the raw (wideband) voltage data from this contact, including
       the filter name and frequency cutoffs, e.g., 'High-pass filter at 300 Hz.'
     quantity: '?'
-  - name: estimated_position
+  - name: estimated_position_in_mm
     neurodata_type_inc: VectorData
     dtype:
     - name: ap
@@ -207,7 +207,7 @@ groups:
     dtype: text
     doc: The brain area of the estimated contact position, e.g., 'CA1'.
     quantity: '?'
-  - name: actual_position
+  - name: actual_position_in_mm
     neurodata_type_inc: VectorData
     dtype:
     - name: ap

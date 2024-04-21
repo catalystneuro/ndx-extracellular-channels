@@ -34,7 +34,7 @@ class TestContactsTable(TestCase):
 
         # for testing, mix and match different shapes. np.nan means the radius/width/height does not apply
         ct.add_row(
-            relative_position=[10.0, 10.0],
+            relative_position_in_mm=[10.0, 10.0],
             shape="circle",
             contact_id="C1",
             shank_id="shank0",
@@ -46,7 +46,7 @@ class TestContactsTable(TestCase):
         )
 
         ct.add_row(
-            relative_position=[20.0, 10.0],
+            relative_position_in_mm=[20.0, 10.0],
             shape="square",
             contact_id="C2",
             shank_id="shank0",
@@ -59,13 +59,13 @@ class TestContactsTable(TestCase):
 
         # TODO might be nice to put this on the constructor of ContactsTable as relative_position__reference
         # without using a custom mapper
-        ct["relative_position"].reference = "The bottom tip of the probe"
+        ct["relative_position_in_mm"].reference = "The bottom tip of the probe"
 
         assert ct.name == "ContactsTable"
         assert ct.description == "Test contacts table"
-        assert ct["relative_position"].reference == "The bottom tip of the probe"
+        assert ct["relative_position_in_mm"].reference == "The bottom tip of the probe"
 
-        assert ct["relative_position"].data == [[10.0, 10.0], [20.0, 10.0]]
+        assert ct["relative_position_in_mm"].data == [[10.0, 10.0], [20.0, 10.0]]
         assert ct["shape"].data == ["circle", "square"]
         assert ct["contact_id"].data == ["C1", "C2"]
         assert ct["shank_id"].data == ["shank0", "shank0"]
@@ -89,7 +89,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
 
         # for testing, mix and match different shapes. np.nan means the radius/width/height does not apply
         ct.add_row(
-            relative_position=[10.0, 10.0],
+            relative_position_in_mm=[10.0, 10.0],
             shape="circle",
             contact_id="C1",
             shank_id="shank0",
@@ -101,7 +101,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
         )
 
         ct.add_row(
-            relative_position=[20.0, 10.0],
+            relative_position_in_mm=[20.0, 10.0],
             shape="square",
             contact_id="C2",
             shank_id="shank0",
@@ -129,7 +129,7 @@ class TestProbeModel(TestCase):
             description="Test contacts table",
         )
         ct.add_row(
-            relative_position=[10.0, 10.0],
+            relative_position_in_mm=[10.0, 10.0],
             shape="circle",
         )
 
@@ -162,7 +162,7 @@ class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
             description="Test contacts table",
         )
         ct.add_row(
-            relative_position=[10.0, 10.0],
+            relative_position_in_mm=[10.0, 10.0],
             shape="circle",
         )
 
@@ -191,7 +191,7 @@ class TestProbe(TestCase):
             description="Test contacts table",
         )
         ct.add_row(
-            relative_position=[10.0, 10.0],
+            relative_position_in_mm=[10.0, 10.0],
             shape="circle",
         )
 
@@ -219,7 +219,7 @@ class TestProbe(TestCase):
             description="Test contacts table",
         )
         ct.add_row(
-            relative_position=[10.0, 10.0],
+            relative_position_in_mm=[10.0, 10.0],
             shape="circle",
         )
 
@@ -252,7 +252,7 @@ class TestProbeRoundTrip(NWBH5IOFlexMixin, TestCase):
             description="Test contacts table",
         )
         ct.add_row(
-            relative_position=[10.0, 10.0],
+            relative_position_in_mm=[10.0, 10.0],
             shape="circle",
         )
 
@@ -283,15 +283,15 @@ def _create_test_probe():
         description="Test contacts table",
     )
     ct.add_row(
-        relative_position=[10.0, 10.0],
+        relative_position_in_mm=[10.0, 10.0],
         shape="circle",
     )
     ct.add_row(
-        relative_position=[10.0, 10.0],
+        relative_position_in_mm=[10.0, 10.0],
         shape="circle",
     )
     ct.add_row(
-        relative_position=[10.0, 10.0],
+        relative_position_in_mm=[10.0, 10.0],
         shape="circle",
     )
 
@@ -419,9 +419,9 @@ class TestChannelsTable(TestCase):
             contact=0,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position=[-1.5, 2.5, -2.5],
+            estimated_position_in_mm=[-1.5, 2.5, -2.5],
             estimated_brain_area="CA3",
-            actual_position=[-1.5, 2.4, -2.4],
+            actual_position_in_mm=[-1.5, 2.4, -2.4],
             actual_brain_area="CA3",
         )
 
@@ -429,16 +429,16 @@ class TestChannelsTable(TestCase):
             contact=1,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position=[-1.5, 2.5, -2.4],
+            estimated_position_in_mm=[-1.5, 2.5, -2.4],
             estimated_brain_area="CA3",
-            actual_position=[-1.5, 2.4, -2.3],
+            actual_position_in_mm=[-1.5, 2.4, -2.3],
             actual_brain_area="CA3",
         )
 
         # TODO might be nice to put this on the constructor of ContactsTable as relative_position__reference
         # without using a custom mapper
-        ct["estimated_position"].reference = "Bregma at the cortical surface"
-        ct["actual_position"].reference = "Bregma at the cortical surface"
+        ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
+        ct["actual_position_in_mm"].reference = "Bregma at the cortical surface"
 
         # TODO
         assert ct.name == "Neuropixels1ChannelsTable"
@@ -477,9 +477,9 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             contact=0,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position=[-1.5, 2.5, -2.5],
+            estimated_position_in_mm=[-1.5, 2.5, -2.5],
             estimated_brain_area="CA3",
-            actual_position=[-1.5, 2.4, -2.4],
+            actual_position_in_mm=[-1.5, 2.4, -2.4],
             actual_brain_area="CA3",
         )
 
@@ -487,17 +487,17 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             contact=1,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position=[-1.5, 2.5, -2.4],
+            estimated_position_in_mm=[-1.5, 2.5, -2.4],
             estimated_brain_area="CA3",
-            actual_position=[-1.5, 2.4, -2.3],
+            actual_position_in_mm=[-1.5, 2.4, -2.3],
             actual_brain_area="CA3",
         )
 
         # TODO might be nice to put this on the constructor of ContactsTable as relative_position__reference
         # without using a custom mapper
         # TODO does matching this happen in the container equals roundtrip test?
-        ct["estimated_position"].reference = "Bregma at the cortical surface"
-        ct["actual_position"].reference = "Bregma at the cortical surface"
+        ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
+        ct["actual_position_in_mm"].reference = "Bregma at the cortical surface"
 
         # put this in nwbfile.acquisition for testing
         self.nwbfile.add_acquisition(ct)

@@ -49,9 +49,9 @@ def main():
         default_name="contacts_table",
         datasets=[
             NWBDatasetSpec(
-                name="relative_position",
+                name="relative_position_in_mm",
                 neurodata_type_inc="VectorData",
-                doc="Relative position of the contact",
+                doc="Relative position of the contact in millimeters, relative to `reference`.",
                 dtype="float",
                 dims=[["num_contacts", "x, y"], ["num_contacts", "x, y, z"]],
                 shape=[[None, 2], [None, 3]],
@@ -327,7 +327,7 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="estimated_position",
+                name="estimated_position_in_mm",
                 neurodata_type_inc="VectorData",
                 doc=(
                     "Stereotactic coordinates (AP, ML, DV) of the estimated contact position, in millimeters. "
@@ -371,7 +371,7 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="actual_position",
+                name="actual_position_in_mm",
                 neurodata_type_inc="VectorData",
                 doc=(
                     "Stereotactic coordinates (AP, ML, DV) of the the verified actual contact position, such as from "
