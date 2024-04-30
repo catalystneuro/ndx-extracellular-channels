@@ -125,7 +125,8 @@ class TestProbeModel(TestCase):
 
     def test_constructor(self):
         """Test that the constructor for ProbeModel sets values as expected."""
-        ct = ContactsTable(  # NOTE: this must be named "contacts_table" when used in ProbeModel
+        # NOTE: ContactsTable must be named "contacts_table" when used in ProbeModel. this is the default.
+        ct = ContactsTable(
             description="Test contacts table",
         )
         ct.add_row(
@@ -264,7 +265,10 @@ class TestProbeRoundTrip(NWBH5IOFlexMixin, TestCase):
             planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
-        # TODO put this into /general/device_models
+        # TODO after integration in core, change this to add_device_model which puts it in
+        # /general/devices/models or /general/device_models.
+        # Alternatively, ProbeModel is a child of Probe and if there are multiple Probe objects
+        # that use the same ProbeModel, then create a link
         self.nwbfile.add_device(pm)
 
         probe = Probe(
@@ -400,7 +404,8 @@ class TestChannelsTable(TestCase):
     def test_constructor_add_row(self):
         """Test that the constructor for ChannelsTable sets values as expected."""
         probe = _create_test_probe()
-        pi = ProbeInsertion()  # NOTE: this must be named "probe_insertion" when used in ChannelsTable
+        # NOTE: ProbeInsertion must be named "probe_insertion" when used in ChannelsTable. this is the default.
+        pi = ProbeInsertion()
 
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
@@ -435,7 +440,7 @@ class TestChannelsTable(TestCase):
             actual_brain_area="CA3",
         )
 
-        # TODO might be nice to put this on the constructor of ContactsTable as relative_position__reference
+        # TODO might be nice to put this on the constructor of ContactsTable as position__reference
         # without using a custom mapper
         ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
         ct["actual_position_in_mm"].reference = "Bregma at the cortical surface"
@@ -453,7 +458,7 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
 
     def addContainer(self):
         probe = _create_test_probe()
-        self.nwbfile.add_device(probe.probe_model)  # TODO change to add_device_model
+        self.nwbfile.add_device(probe.probe_model)  # TODO change to add_device_model after integration in core
         self.nwbfile.add_device(probe)
 
         pi = ProbeInsertion(
@@ -493,7 +498,7 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             actual_brain_area="CA3",
         )
 
-        # TODO might be nice to put this on the constructor of ContactsTable as relative_position__reference
+        # TODO might be nice to put this on the constructor of ContactsTable as position__reference
         # without using a custom mapper
         # TODO does matching this happen in the container equals roundtrip test?
         ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
@@ -555,7 +560,7 @@ class TestExtracellularSeriesRoundTrip(NWBH5IOFlexMixin, TestCase):
 
     def addContainer(self):
         probe = _create_test_probe()
-        self.nwbfile.add_device(probe.probe_model)  # TODO change to add_device_model
+        self.nwbfile.add_device(probe.probe_model)  # TODO change to add_device_model after integration in core
         self.nwbfile.add_device(probe)
 
         ct = ChannelsTable(

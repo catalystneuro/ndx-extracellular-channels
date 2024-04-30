@@ -235,7 +235,7 @@ def main():
                     '"bregma at the cortical surface".'
                 ),
                 dtype="text",
-                required=False,
+                required=False,  # TODO should this be required?
             ),
             NWBAttributeSpec(
                 name="hemisphere",  # TODO this is useful to cache but could be done at the API level
@@ -458,7 +458,6 @@ def main():
                         ),
                         value="volts",
                         dtype="text",
-                        required=True,
                     )
                 ],
             ),
