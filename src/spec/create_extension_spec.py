@@ -171,7 +171,7 @@ def main():
                 name="planar_contour_in_um",  # TODO should this just be "contour"?
                 doc=("The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
                      "in micrometers. The first and last points are connected to close the polygon. "
-	                 "e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]."
+                     "e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]."
                      "See 'probe_planar_contour' in "
                      "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."),
                 dtype="float",

@@ -116,6 +116,7 @@ line-length = 120
 "src/pynwb/ndx_extracellular_channels/__init__.py" = ["E402", "F401"]
 "src/spec/create_extension_spec.py" = ["T201"]
 "src/pynwb/tests/test_example_usage_all.py" = ["T201"]
+"src/pynwb/tests/test_example_usage_probeinterface.py" = ["T201"]
 
 [tool.ruff.mccabe]
 max-complexity = 17
