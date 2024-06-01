@@ -1,8 +1,11 @@
+from __future__ import annotations  # postpone type hint evaluation
 import ndx_extracellular_channels
 import numpy as np
-import probeinterface
-from typing import Union, List
+from typing import Union, List, TYPE_CHECKING
 import warnings
+
+if TYPE_CHECKING:
+    import probeinterface
 
 # map from probeinterface units to ndx-extracellular-channels units
 unit_map = {
@@ -33,6 +36,13 @@ def from_probeinterface(
     probe_models: list
         The list of ndx-extracellular-channels Probe objects.
     """
+    try:
+        import probeinterface
+    except ImportError:
+        raise ImportError(
+            "To use the probeinterface conversion functions, install probeinterface: pip install probeinterface"
+        )
+
     assert isinstance(probe_or_probegroup, (probeinterface.Probe, probeinterface.ProbeGroup)), \
         f"The input must be a Probe or ProbeGroup, not {type(probe_or_probegroup)}."
     if isinstance(probe_or_probegroup, probeinterface.Probe):
@@ -67,6 +77,13 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
     -------
     Probe: probeinterface.Probe
     """
+    try:
+        import probeinterface
+    except ImportError:
+        raise ImportError(
+            "To use the probeinterface conversion functions, install probeinterface: pip install probeinterface"
+        )
+
     positions = []
     shapes = []
 
