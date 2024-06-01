@@ -165,7 +165,8 @@ def main():
         datasets=[
             NWBDatasetSpec(  # TODO should this be an attribute?
                 name="planar_contour",  # TODO should this just be "contour"?
-                doc="The planar polygon that outlines the probe contour.",
+                doc=("The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
+	                 "e.g., [(-20, -30), (20, -110), (60, -30), (60, 190), (-20, 190)]."),
                 dtype="float",
                 dims=[["num_points", "x"], ["num_points", "x, y"], ["num_points", "x, y, z"]],
                 shape=[[None, 1], [None, 2], [None, 3]],
