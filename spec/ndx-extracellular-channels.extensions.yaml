@@ -39,7 +39,7 @@ groups:
     dtype: text
     doc: Shank ID of the contact
     quantity: '?'
-  - name: contact_plane_axes
+  - name: plane_axes
     neurodata_type_inc: VectorData
     dtype: float
     dims:
@@ -56,7 +56,7 @@ groups:
     - - null
       - 2
       - 3
-    doc: The axes defining the contact plane. See https://probeinterface.readthedocs.io/en/main/format_spec.html
+    doc: The axes defining the contact plane. See 'contact_plane_axes' in https://probeinterface.readthedocs.io/en/main/format_spec.html
       for more details.
     quantity: '?'
   - name: radius_in_um
@@ -81,18 +81,15 @@ groups:
     quantity: '?'
 - neurodata_type_def: ProbeModel
   neurodata_type_inc: Device
-  doc: Neural probe object, compatible with the ProbeInterface specification.
+  doc: Neural probe object, compatible with the ProbeInterface specification. The
+    name of the object should be the model name of the probe, e.g., 'Neuropixels 1.0'.
   attributes:
   - name: ndim
     dtype: int
     default_value: 2
     doc: dimension of the probe
     required: false
-  - name: model_name
-    dtype: text
-    doc: model of the probe; e.g. 'Neuropixels 1.0'
-  datasets:
-  - name: planar_contour
+  - name: planar_contour_in_um
     dtype: float
     dims:
     - - num_points
@@ -109,13 +106,10 @@ groups:
     - - null
       - 3
     doc: The coordinates of the nodes of the polygon that describe the shape (contour)
-      of the probe, e.g., [(-20, -30), (20, -110), (60, -30), (60, 190), (-20, 190)].
-    attributes:
-    - name: unit
-      dtype: text
-      default_value: micrometers
-      doc: SI unit used to define the probe; e.g. 'meters'.
-      required: false
+      of the probe, in micrometers. The first and last points are connected to close
+      the polygon. e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20.,
+      190.)].See 'probe_planar_contour' in https://probeinterface.readthedocs.io/en/main/format_spec.html
+      for more details.
   groups:
   - name: contacts_table
     neurodata_type_inc: ContactsTable

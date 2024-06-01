@@ -38,7 +38,7 @@ class TestContactsTable(TestCase):
             shape="circle",
             contact_id="C1",
             shank_id="shank0",
-            contact_plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
             radius_in_um=10.0,
             width_in_um=np.nan,
             height_in_um=np.nan,
@@ -50,7 +50,7 @@ class TestContactsTable(TestCase):
             shape="square",
             contact_id="C2",
             shank_id="shank0",
-            contact_plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
             radius_in_um=np.nan,
             width_in_um=10.0,
             height_in_um=10.0,
@@ -69,7 +69,7 @@ class TestContactsTable(TestCase):
         assert ct["shape"].data == ["circle", "square"]
         assert ct["contact_id"].data == ["C1", "C2"]
         assert ct["shank_id"].data == ["shank0", "shank0"]
-        assert ct["contact_plane_axes"].data == [[[0.0, 1.0], [1.0, 0.0]], [[0.0, 1.0], [1.0, 0.0]]]
+        assert ct["plane_axes"].data == [[[0.0, 1.0], [1.0, 0.0]], [[0.0, 1.0], [1.0, 0.0]]]
         assert ct["radius_in_um"].data == [10.0, np.nan]
         assert ct["width_in_um"].data == [np.nan, 10.0]
         assert ct["device_channel_index_pi"].data == [1, 2]
@@ -93,7 +93,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             shape="circle",
             contact_id="C1",
             shank_id="shank0",
-            contact_plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
             radius_in_um=10.0,
             width_in_um=np.nan,
             height_in_um=np.nan,
@@ -105,7 +105,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             shape="square",
             contact_id="C2",
             shank_id="shank0",
-            contact_plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
             radius_in_um=np.nan,
             width_in_um=10.0,
             height_in_um=10.0,
@@ -135,19 +135,18 @@ class TestProbeModel(TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels",
+            name="Neuropixels 1.0",
             description="A neuropixels probe",
             manufacturer="IMEC",
-            model_name="Neuropixels 1.0",
-            planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],  # TODO make this optional
+            # TODO make planar_contour_in_um optional
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
 
-        assert pm.name == "Neuropixels"
+        assert pm.name == "Neuropixels 1.0"
         assert pm.description == "A neuropixels probe"
         assert pm.manufacturer == "IMEC"
-        assert pm.model_name == "Neuropixels 1.0"
-        assert pm.planar_contour == [[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]]
+        assert pm.planar_contour_in_um == [[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]]
         assert pm.contacts_table is ct
         assert pm.ndim == 2
 
@@ -168,11 +167,10 @@ class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels",
+            name="Neuropixels 1.0",
             description="A neuropixels probe",
             manufacturer="IMEC",
-            model_name="Neuropixels 1.0",
-            planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],  # TODO make this optional
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
 
@@ -180,7 +178,7 @@ class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
         self.nwbfile.add_device(pm)
 
     def getContainer(self, nwbfile: NWBFile):
-        return nwbfile.devices["Neuropixels"]
+        return nwbfile.devices["Neuropixels 1.0"]
 
 
 class TestProbe(TestCase):
@@ -197,11 +195,10 @@ class TestProbe(TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels",
+            name="Neuropixels 1.0",
             description="A neuropixels probe",
             manufacturer="IMEC",
-            model_name="Neuropixels 1.0",
-            planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],  # TODO make this optional
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
 
@@ -225,11 +222,10 @@ class TestProbe(TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels",
+            name="Neuropixels 1.0",
             description="A neuropixels probe",
             manufacturer="IMEC",
-            model_name="Neuropixels 1.0",
-            planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],  # TODO make this optional
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
 
@@ -258,11 +254,10 @@ class TestProbeRoundTrip(NWBH5IOFlexMixin, TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels",
+            name="Neuropixels 1.0",
             description="A neuropixels probe",
             manufacturer="IMEC",
-            model_name="Neuropixels 1.0",
-            planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
         # TODO after integration in core, change this to add_device_model which puts it in
@@ -300,11 +295,10 @@ def _create_test_probe():
     )
 
     pm = ProbeModel(
-        name="Neuropixels",
+        name="Neuropixels 1.0",
         description="A neuropixels probe",
         manufacturer="IMEC",
-        model_name="Neuropixels 1.0",
-        planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+        planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
         contacts_table=ct,
     )
 

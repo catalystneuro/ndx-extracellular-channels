@@ -26,7 +26,6 @@ pip install ndx_extracellular_channels
 
 ## Usage
 
-(TODO test these examples)
 ### Going from a `probeinterface.Probe`/`ProbeGroup` object to a `ndx_extracellular_channels.Probe` object
 ```python
 import ndx_extracellular_channels
@@ -66,6 +65,8 @@ for ndx_probe in ndx_probes:
     pi_probe = ndx_extracellular_channels.to_probeinterface(ndx_probe)
     pi_probes.append(pi_probe)
 ```
+
+See `src/pynwb/tests/test_example_usage_probeinterface.py` for a full example.
 
 ## Diagram
 

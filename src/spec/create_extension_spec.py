@@ -88,11 +88,12 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="contact_plane_axes",
+                name="plane_axes",
                 neurodata_type_inc="VectorData",
                 doc=(
                     "The axes defining the contact plane. "
-                    "See https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."
+                    "See 'contact_plane_axes' in "
+                    "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."
                 ),
                 dtype="float",
                 dims=[["num_contacts", "v1, v2", "x, y"], ["num_contacts", "v1, v2", "x, y, z"]],
@@ -154,7 +155,8 @@ def main():
     probe_model = NWBGroupSpec(
         neurodata_type_def="ProbeModel",
         neurodata_type_inc="Device",
-        doc="Neural probe object, compatible with the ProbeInterface specification.",
+        doc=("Neural probe object, compatible with the ProbeInterface specification. The name of the object should "
+             "be the model name of the probe, e.g., 'Neuropixels 1.0'."),
         groups=[
             NWBGroupSpec(
                 name="contacts_table",
@@ -162,32 +164,20 @@ def main():
                 doc="Neural probe contacts, compatible with the ProbeInterface specification",
             ),
         ],
-        datasets=[
-            NWBDatasetSpec(  # TODO should this be an attribute?
-                name="planar_contour",  # TODO should this just be "contour"?
-                doc=("The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
-	                 "e.g., [(-20, -30), (20, -110), (60, -30), (60, 190), (-20, 190)]."),
-                dtype="float",
-                dims=[["num_points", "x"], ["num_points", "x, y"], ["num_points", "x, y, z"]],
-                shape=[[None, 1], [None, 2], [None, 3]],
-                attributes=[
-                    NWBAttributeSpec(
-                        name="unit",
-                        doc="SI unit used to define the probe; e.g. 'meters'.",
-                        dtype="text",
-                        default_value="micrometers",
-                    ),
-                ],
-            )
-        ],
         attributes=[
             # inherits name, description, manufacturer from Device
             NWBAttributeSpec(name="ndim", doc="dimension of the probe", dtype="int", default_value=2),
             NWBAttributeSpec(
-                name="model_name",
-                doc="model of the probe; e.g. 'Neuropixels 1.0'",
-                dtype="text",
-            ),  # TODO is this redundant? There should not be more than 1 ProbeModel object got a given model_name
+                name="planar_contour_in_um",  # TODO should this just be "contour"?
+                doc=("The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
+                     "in micrometers. The first and last points are connected to close the polygon. "
+	                 "e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]."
+                     "See 'probe_planar_contour' in "
+                     "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."),
+                dtype="float",
+                dims=[["num_points", "x"], ["num_points", "x, y"], ["num_points", "x, y, z"]],
+                shape=[[None, 1], [None, 2], [None, 3]],
+            ),
         ],
     )
 

@@ -30,7 +30,7 @@ contacts_table.add_row(
     shape="circle",
     contact_id="C1",
     shank_id="shank0",
-    contact_plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+    plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
     radius_in_um=10.0,
     width_in_um=np.nan,
     height_in_um=np.nan,
@@ -41,7 +41,7 @@ contacts_table.add_row(
     shape="square",
     contact_id="C2",
     shank_id="shank0",
-    contact_plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+    plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
     radius_in_um=np.nan,
     width_in_um=10.0,
     height_in_um=10.0,
@@ -53,11 +53,10 @@ contacts_table.add_row(
 nwbfile.add_acquisition(contacts_table)
 
 pm = ProbeModel(
-    name="Neuropixels",
+    name="Neuropixels 1.0",
     description="A neuropixels probe",
     manufacturer="IMEC",
-    model_name="Neuropixels 1.0",
-    planar_contour=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+    planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
     contacts_table=contacts_table,
 )
 # TODO put this into /general/device_models
@@ -147,5 +146,5 @@ with NWBHDF5IO(path, mode="r") as io:
     print(read_nwbfile.acquisition["ExtracellularSeries"])
     print(read_nwbfile.acquisition["Neuropixels1ChannelsTable"])
     print(read_nwbfile.devices["Neuropixels Probe 1"])
-    print(read_nwbfile.devices["Neuropixels"])
+    print(read_nwbfile.devices["Neuropixels 1.0"])
     print(read_nwbfile.acquisition["contacts_table"])

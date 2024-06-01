@@ -25,5 +25,7 @@ Probe = get_class("Probe", "ndx-extracellular-channels")
 ChannelsTable = get_class("ChannelsTable", "ndx-extracellular-channels")
 ExtracellularSeries = get_class("ExtracellularSeries", "ndx-extracellular-channels")
 
+from .io import from_probeinterface, to_probeinterface
+
 # Remove these functions from the package
 del load_namespaces, get_class
