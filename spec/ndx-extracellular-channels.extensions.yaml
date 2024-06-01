@@ -108,7 +108,8 @@ groups:
       - 2
     - - null
       - 3
-    doc: The planar polygon that outlines the probe contour.
+    doc: The coordinates of the nodes of the polygon that describe the shape (contour) of the probe,
+      e.g., [(-20, -30), (20, -110), (60, -30), (60, 190), (-20, 190)].
     attributes:
     - name: unit
       dtype: text
