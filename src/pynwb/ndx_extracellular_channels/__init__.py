@@ -25,11 +25,5 @@ Probe = get_class("Probe", "ndx-extracellular-channels")
 ChannelsTable = get_class("ChannelsTable", "ndx-extracellular-channels")
 ExtracellularSeries = get_class("ExtracellularSeries", "ndx-extracellular-channels")
 
-# NOTE: `widgets/tetrode_series_widget.py` adds a "widget"
-# attribute to the TetrodeSeries class. This attribute is used by NWBWidgets.
-# Delete the `widgets` subpackage or the `tetrode_series_widget.py` module
-# if you do not want to define a custom widget for your extension neurodata
-# type.
-
 # Remove these functions from the package
 del load_namespaces, get_class
