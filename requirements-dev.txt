@@ -7,6 +7,7 @@ hdmf==3.13.0
 hdmf-docutils==0.4.7
 nwbwidgets==0.11.3
 pre-commit==3.5.0
+probeinterface==0.2.21
 pynwb==2.6.0
 pytest==8.1.1
 pytest-cov==5.0.0
