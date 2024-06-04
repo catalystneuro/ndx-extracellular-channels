@@ -137,6 +137,7 @@ class TestProbeModel(TestCase):
         pm = ProbeModel(
             name="Neuropixels 1.0",
             description="A neuropixels probe",
+            model="Neuropixels 1.0",
             manufacturer="IMEC",
             # TODO make planar_contour_in_um optional
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
@@ -169,6 +170,7 @@ class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
         pm = ProbeModel(
             name="Neuropixels 1.0",
             description="A neuropixels probe",
+            model="Neuropixels 1.0",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
@@ -197,6 +199,7 @@ class TestProbe(TestCase):
         pm = ProbeModel(
             name="Neuropixels 1.0",
             description="A neuropixels probe",
+            model="Neuropixels 1.0",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
@@ -224,6 +227,7 @@ class TestProbe(TestCase):
         pm = ProbeModel(
             name="Neuropixels 1.0",
             description="A neuropixels probe",
+            model="Neuropixels 1.0",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
@@ -256,6 +260,7 @@ class TestProbeRoundTrip(NWBH5IOFlexMixin, TestCase):
         pm = ProbeModel(
             name="Neuropixels 1.0",
             description="A neuropixels probe",
+            model="Neuropixels 1.0",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
@@ -297,6 +302,7 @@ def _create_test_probe():
     pm = ProbeModel(
         name="Neuropixels 1.0",
         description="A neuropixels probe",
+        model="Neuropixels 1.0",
         manufacturer="IMEC",
         planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
         contacts_table=ct,

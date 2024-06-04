@@ -89,18 +89,17 @@ groups:
     default_value: 2
     doc: dimension of the probe
     required: false
+  - name: model
+    dtype: text
+    doc: Name of the model of the probe, e.g., 'Neuropixels 1.0'.
   - name: planar_contour_in_um
     dtype: float
     dims:
-    - - num_points
-      - x
     - - num_points
       - x, y
     - - num_points
       - x, y, z
     shape:
-    - - null
-      - 1
     - - null
       - 2
     - - null

@@ -55,6 +55,7 @@ nwbfile.add_acquisition(contacts_table)
 pm = ProbeModel(
     name="Neuropixels 1.0",
     description="A neuropixels probe",
+    model="neuropixels 1.0",
     manufacturer="IMEC",
     planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
     contacts_table=contacts_table,

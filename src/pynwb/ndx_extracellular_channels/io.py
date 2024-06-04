@@ -203,6 +203,7 @@ def _single_probe_to_ndx_probe(
     probe_model = ndx_extracellular_channels.ProbeModel(
         name=model_name,
         manufacturer=probe.manufacturer,
+        model=model_name,
         ndim=probe.ndim,
         planar_contour_in_um=probe.probe_planar_contour * conversion_factor,
         contacts_table=contacts_table,

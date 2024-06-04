@@ -168,6 +168,14 @@ def main():
             # inherits name, description, manufacturer from Device
             NWBAttributeSpec(name="ndim", doc="dimension of the probe", dtype="int", default_value=2),
             NWBAttributeSpec(
+                # although the ProbeModel also has a name attribute, the name must be unique across all
+                # devices in the NWB file, and users may decide to use a more descriptive name than just
+                # the model name
+                name="model",
+                doc="Name of the model of the probe, e.g., 'Neuropixels 1.0'.",
+                dtype="text",
+            ),
+            NWBAttributeSpec(
                 name="planar_contour_in_um",  # TODO should this just be "contour"?
                 doc=("The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
                      "in micrometers. The first and last points are connected to close the polygon. "
@@ -175,8 +183,8 @@ def main():
                      "See 'probe_planar_contour' in "
                      "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."),
                 dtype="float",
-                dims=[["num_points", "x"], ["num_points", "x, y"], ["num_points", "x, y, z"]],
-                shape=[[None, 1], [None, 2], [None, 3]],
+                dims=[["num_points", "x, y"], ["num_points", "x, y, z"]],
+                shape=[[None, 2], [None, 3]],
             ),
         ],
     )
