@@ -102,10 +102,10 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
         if contact_ids is None:
             contact_ids = []
         contact_ids.append(contacts_table["contact_id"][:])
-    if "device_channel_index_pi" in contacts_table.colnames:
+    if "device_channel" in contacts_table.colnames:
         if device_channel_indices is None:
             device_channel_indices = []
-        device_channel_indices.append(contacts_table["device_channel_index_pi"][:])
+        device_channel_indices.append(contacts_table["device_channel"][:])
     if "plane_axes" in contacts_table.colnames:
         if plane_axes is None:
             plane_axes = []
@@ -190,7 +190,7 @@ def _single_probe_to_ndx_probe(
         if probe.contact_ids is not None:
             kwargs["contact_id"] = probe.contact_ids[index]
         if probe.device_channel_indices is not None:
-            kwargs["device_channel_index_pi"] = probe.device_channel_indices[index]
+            kwargs["device_channel"] = probe.device_channel_indices[index]
         if probe.shank_ids is not None:
             kwargs["shank_id"] = probe.shank_ids[index]
         contacts_table.add_row(kwargs)

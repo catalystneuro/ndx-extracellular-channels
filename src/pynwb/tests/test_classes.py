@@ -42,7 +42,7 @@ class TestContactsTable(TestCase):
             radius_in_um=10.0,
             width_in_um=np.nan,
             height_in_um=np.nan,
-            device_channel_index_pi=1,  # TODO what is this for?
+            device_channel=1,
         )
 
         ct.add_row(
@@ -54,7 +54,7 @@ class TestContactsTable(TestCase):
             radius_in_um=np.nan,
             width_in_um=10.0,
             height_in_um=10.0,
-            device_channel_index_pi=2,  # TODO what is this for?
+            device_channel=2,
         )
 
         # TODO might be nice to put this on the constructor of ContactsTable as relative_position__reference
@@ -72,7 +72,7 @@ class TestContactsTable(TestCase):
         assert ct["plane_axes"].data == [[[0.0, 1.0], [1.0, 0.0]], [[0.0, 1.0], [1.0, 0.0]]]
         assert ct["radius_in_um"].data == [10.0, np.nan]
         assert ct["width_in_um"].data == [np.nan, 10.0]
-        assert ct["device_channel_index_pi"].data == [1, 2]
+        assert ct["device_channel"].data == [1, 2]
 
 
 class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
@@ -97,7 +97,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             radius_in_um=10.0,
             width_in_um=np.nan,
             height_in_um=np.nan,
-            device_channel_index_pi=1,  # TODO what is this for?
+            device_channel=1,
         )
 
         ct.add_row(
@@ -109,7 +109,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             radius_in_um=np.nan,
             width_in_um=10.0,
             height_in_um=10.0,
-            device_channel_index_pi=2,  # TODO what is this for?
+            device_channel=2,
         )
 
         # add the object into nwbfile.acquisition for testing

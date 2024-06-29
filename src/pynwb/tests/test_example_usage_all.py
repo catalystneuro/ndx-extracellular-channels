@@ -34,7 +34,7 @@ contacts_table.add_row(
     radius_in_um=10.0,
     width_in_um=np.nan,
     height_in_um=np.nan,
-    device_channel_index_pi=1,  # TODO what is this for?
+    device_channel=1,
 )
 contacts_table.add_row(
     relative_position_in_mm=[20.0, 10.0],
@@ -45,7 +45,7 @@ contacts_table.add_row(
     radius_in_um=np.nan,
     width_in_um=10.0,
     height_in_um=10.0,
-    device_channel_index_pi=2,  # TODO what is this for?
+    device_channel=2,
 )
 
 # add the object into nwbfile.acquisition for testing
