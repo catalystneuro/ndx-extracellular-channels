@@ -98,8 +98,8 @@ channels_table.add_row(
     filter="High-pass at 300 Hz",
     estimated_position_in_mm=[-1.5, 2.5, -2.5],
     estimated_brain_area="CA3",
-    actual_position_in_mm=[-1.5, 2.4, -2.4],
-    actual_brain_area="CA3",
+    confirmed_position_in_mm=[-1.5, 2.4, -2.4],
+    confirmed_brain_area="CA3",
 )
 channels_table.add_row(
     contact=1,
@@ -107,11 +107,11 @@ channels_table.add_row(
     filter="High-pass at 300 Hz",
     estimated_position_in_mm=[-1.5, 2.5, -2.4],
     estimated_brain_area="CA3",
-    actual_position_in_mm=[-1.5, 2.4, -2.3],
-    actual_brain_area="CA3",
+    confirmed_position_in_mm=[-1.5, 2.4, -2.3],
+    confirmed_brain_area="CA3",
 )
 channels_table["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
-channels_table["actual_position_in_mm"].reference = "Bregma at the cortical surface"
+channels_table["confirmed_position_in_mm"].reference = "Bregma at the cortical surface"
 
 # put this in nwbfile.acquisition for testing
 nwbfile.add_acquisition(channels_table)

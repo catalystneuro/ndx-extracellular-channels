@@ -426,8 +426,8 @@ class TestChannelsTable(TestCase):
             filter="High-pass at 300 Hz",
             estimated_position_in_mm=[-1.5, 2.5, -2.5],
             estimated_brain_area="CA3",
-            actual_position_in_mm=[-1.5, 2.4, -2.4],
-            actual_brain_area="CA3",
+            confirmed_position_in_mm=[-1.5, 2.4, -2.4],
+            confirmed_brain_area="CA3",
         )
 
         ct.add_row(
@@ -436,14 +436,14 @@ class TestChannelsTable(TestCase):
             filter="High-pass at 300 Hz",
             estimated_position_in_mm=[-1.5, 2.5, -2.4],
             estimated_brain_area="CA3",
-            actual_position_in_mm=[-1.5, 2.4, -2.3],
-            actual_brain_area="CA3",
+            confirmed_position_in_mm=[-1.5, 2.4, -2.3],
+            confirmed_brain_area="CA3",
         )
 
         # TODO might be nice to put this on the constructor of ContactsTable as position__reference
         # without using a custom mapper
         ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
-        ct["actual_position_in_mm"].reference = "Bregma at the cortical surface"
+        ct["confirmed_position_in_mm"].reference = "Bregma at the cortical surface"
 
         # TODO
         assert ct.name == "Neuropixels1ChannelsTable"
@@ -484,8 +484,8 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             filter="High-pass at 300 Hz",
             estimated_position_in_mm=[-1.5, 2.5, -2.5],
             estimated_brain_area="CA3",
-            actual_position_in_mm=[-1.5, 2.4, -2.4],
-            actual_brain_area="CA3",
+            confirmed_position_in_mm=[-1.5, 2.4, -2.4],
+            confirmed_brain_area="CA3",
         )
 
         ct.add_row(
@@ -494,15 +494,15 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             filter="High-pass at 300 Hz",
             estimated_position_in_mm=[-1.5, 2.5, -2.4],
             estimated_brain_area="CA3",
-            actual_position_in_mm=[-1.5, 2.4, -2.3],
-            actual_brain_area="CA3",
+            confirmed_position_in_mm=[-1.5, 2.4, -2.3],
+            confirmed_brain_area="CA3",
         )
 
         # TODO might be nice to put this on the constructor of ContactsTable as position__reference
         # without using a custom mapper
         # TODO does matching this happen in the container equals roundtrip test?
         ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
-        ct["actual_position_in_mm"].reference = "Bregma at the cortical surface"
+        ct["confirmed_position_in_mm"].reference = "Bregma at the cortical surface"
 
         # put this in nwbfile.acquisition for testing
         self.nwbfile.add_acquisition(ct)

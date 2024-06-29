@@ -206,7 +206,7 @@ groups:
     dtype: text
     doc: The brain area of the estimated contact position, e.g., 'CA1'.
     quantity: '?'
-  - name: actual_position_in_mm
+  - name: confirmed_position_in_mm
     neurodata_type_inc: VectorData
     dtype:
     - name: ap
@@ -229,7 +229,7 @@ groups:
       doc: Reference point for the position coordinates. e.g., "bregma at the cortical
         surface".
       required: false
-  - name: actual_brain_area
+  - name: confirmed_brain_area
     neurodata_type_inc: VectorData
     dtype: text
     doc: The brain area of the actual contact position, e.g., 'CA1'.

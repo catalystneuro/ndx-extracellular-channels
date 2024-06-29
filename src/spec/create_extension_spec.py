@@ -377,7 +377,7 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="actual_position_in_mm",
+                name="confirmed_position_in_mm",
                 neurodata_type_inc="VectorData",
                 doc=(
                     "Stereotactic coordinates (AP, ML, DV) of the the verified actual contact position, such as from "
@@ -415,7 +415,7 @@ def main():
                 ],
             ),
             NWBDatasetSpec(
-                name="actual_brain_area",
+                name="confirmed_brain_area",
                 neurodata_type_inc="VectorData",
                 dtype="text",
                 doc=("The brain area of the actual contact position, e.g., 'CA1'."),
