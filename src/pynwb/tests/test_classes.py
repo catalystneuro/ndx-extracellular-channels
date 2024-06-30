@@ -139,7 +139,6 @@ class TestProbeModel(TestCase):
             description="A neuropixels probe",
             model="Neuropixels 1.0",
             manufacturer="IMEC",
-            # TODO make planar_contour_in_um optional
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
@@ -322,31 +321,65 @@ class TestProbeInsertion(TestCase):
     def test_constructor_minimal(self):
         pi = ProbeInsertion()
         assert pi.name == "probe_insertion"
-        assert pi.reference is None
+        assert pi.position_reference is None
         assert pi.hemisphere is None
         assert pi.depth_in_mm is None
-        # assert pi.insertion_position_in_mm is None
-        # assert pi.insertion_angle_in_deg is None
+        assert pi.insertion_position_ap_in_mm is None
+        assert pi.insertion_position_ml_in_mm is None
+        assert pi.insertion_position_dv_in_mm is None
+        assert pi.insertion_angle_roll_in_deg is None
+        assert pi.insertion_angle_pitch_in_deg is None
+        assert pi.insertion_angle_yaw_in_deg is None
 
-    def test_constructor(self):
+    def test_constructor_with_depth(self):
         pi = ProbeInsertion(
             name="ProbeInsertion",  # test custom name
-            reference="Bregma at the cortical surface.",
+            position_reference="Bregma at the cortical surface.",
             hemisphere="left",
             depth_in_mm=10.0,
-            # insertion_position_in_mm=[2.0, -4.0, 0.0],  # TODO waiting on schema
-            # insertion_angle_in_deg=[0.0, 0.0, -10.0],
+            insertion_position_ap_in_mm=2.0,
+            insertion_position_ml_in_mm=-4.0,
+            insertion_angle_roll_in_deg=-10.0,
+            insertion_angle_pitch_in_deg=0.0,
+            insertion_angle_yaw_in_deg=0.0,
         )
 
         assert pi.name == "ProbeInsertion"
-        assert pi.reference == "Bregma at the cortical surface."
+        assert pi.position_reference == "Bregma at the cortical surface."
         assert pi.hemisphere == "left"
         assert pi.depth_in_mm == 10.0
-        # assert pi.insertion_position_in_mm == [2.0, -4.0, 0.0]
-        # assert pi.insertion_angle_in_deg == [0.0, 0.0, -10.0]
+        assert pi.insertion_position_ap_in_mm == 2.0
+        assert pi.insertion_position_ml_in_mm == -4.0
+        assert pi.insertion_position_dv_in_mm is None
+        assert pi.insertion_angle_roll_in_deg == -10.0
+        assert pi.insertion_angle_pitch_in_deg == 0.0
+        assert pi.insertion_angle_yaw_in_deg == 0.0
+
+    def test_constructor_with_dv(self):
+        pi = ProbeInsertion(
+            name="ProbeInsertion",  # test custom name
+            position_reference="Bregma at the cortical surface.",
+            hemisphere="left",
+            insertion_position_ap_in_mm=2.0,
+            insertion_position_ml_in_mm=-4.0,
+            insertion_position_dv_in_mm=-10.0,
+            insertion_angle_roll_in_deg=-10.0,
+            insertion_angle_pitch_in_deg=0.0,
+            insertion_angle_yaw_in_deg=0.0,
+        )
+
+        assert pi.name == "ProbeInsertion"
+        assert pi.position_reference == "Bregma at the cortical surface."
+        assert pi.hemisphere == "left"
+        assert pi.insertion_position_ap_in_mm == 2.0
+        assert pi.insertion_position_ml_in_mm == -4.0
+        assert pi.insertion_position_dv_in_mm == -10.0
+        assert pi.insertion_angle_roll_in_deg == -10.0
+        assert pi.insertion_angle_pitch_in_deg == 0.0
+        assert pi.insertion_angle_yaw_in_deg == 0.0
 
 
-class TestProbeInsertionRoundTrip(NWBH5IOFlexMixin, TestCase):
+class TestProbeInsertionDepthRoundTrip(NWBH5IOFlexMixin, TestCase):
     """Simple roundtrip test for a ProbeInsertion."""
 
     def getContainerType(self):
@@ -355,11 +388,41 @@ class TestProbeInsertionRoundTrip(NWBH5IOFlexMixin, TestCase):
     def addContainer(self):
         pi = ProbeInsertion(
             name="ProbeInsertion",  # test custom name
-            reference="Bregma at the cortical surface.",
+            position_reference="Bregma at the cortical surface.",
             hemisphere="left",
             depth_in_mm=10.0,
-            # insertion_position_in_mm=[2.0, -4.0, 0.0],  # TODO waiting on schema
-            # insertion_angle_in_deg=[0.0, 0.0, -10.0],
+            insertion_position_ap_in_mm=2.0,
+            insertion_position_ml_in_mm=-4.0,
+            insertion_angle_roll_in_deg=-10.0,
+            insertion_angle_pitch_in_deg=0.0,
+            insertion_angle_yaw_in_deg=0.0,
+        )
+
+        # put this in nwbfile.scratch for testing
+        self.nwbfile.add_scratch(pi)
+
+    def getContainer(self, nwbfile: NWBFile):
+        return nwbfile.scratch["ProbeInsertion"]
+
+
+class TestProbeInsertionDVRoundTrip(NWBH5IOFlexMixin, TestCase):
+    """Simple roundtrip test for a ProbeInsertion."""
+
+    def getContainerType(self):
+        return "ProbeInsertion"
+
+    def addContainer(self):
+        pi = ProbeInsertion(
+            name="ProbeInsertion",  # test custom name
+            position_reference="Bregma at the cortical surface.",
+            hemisphere="left",
+            depth_in_mm=10.0,
+            insertion_position_ap_in_mm=2.0,
+            insertion_position_ml_in_mm=-4.0,
+            insertion_position_dv_in_mm=-10.0,
+            insertion_angle_roll_in_deg=-10.0,
+            insertion_angle_pitch_in_deg=0.0,
+            insertion_angle_yaw_in_deg=0.0,
         )
 
         # put this in nwbfile.scratch for testing
@@ -410,7 +473,9 @@ class TestChannelsTable(TestCase):
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
             description="Test channels table",
-            reference_mode="Reference to channel 2",
+            reference_mode="Referenced to channel 2.",
+            position_reference = "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
+            position_confirmation_method = "Histology",
             probe=probe,
             probe_insertion=pi,
             target_tables={
@@ -424,9 +489,13 @@ class TestChannelsTable(TestCase):
             contact=0,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position_in_mm=[-1.5, 2.5, -2.5],
+            estimated_position_ap_in_mm=2.0,
+            estimated_position_ml_in_mm=-5.0,
+            estimated_position_dv_in_mm=-9.5,
             estimated_brain_area="CA3",
-            confirmed_position_in_mm=[-1.5, 2.4, -2.4],
+            confirmed_position_ap_in_mm=2.0,
+            confirmed_position_ml_in_mm=-4.9,
+            confirmed_position_dv_in_mm=-9.5,
             confirmed_brain_area="CA3",
         )
 
@@ -434,20 +503,37 @@ class TestChannelsTable(TestCase):
             contact=1,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position_in_mm=[-1.5, 2.5, -2.4],
+            estimated_position_ap_in_mm=2.0,
+            estimated_position_ml_in_mm=-4.9,
+            estimated_position_dv_in_mm=-9.3,
             estimated_brain_area="CA3",
-            confirmed_position_in_mm=[-1.5, 2.4, -2.3],
+            confirmed_position_ap_in_mm=2.0,
+            confirmed_position_ml_in_mm=-4.8,
+            confirmed_position_dv_in_mm=-9.3,
             confirmed_brain_area="CA3",
         )
 
-        # TODO might be nice to put this on the constructor of ContactsTable as position__reference
-        # without using a custom mapper
-        ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
-        ct["confirmed_position_in_mm"].reference = "Bregma at the cortical surface"
-
-        # TODO
         assert ct.name == "Neuropixels1ChannelsTable"
-        # assert ...
+        assert ct.description == "Test channels table"
+        assert ct.reference_mode == "Referenced to channel 2."
+        assert ct.position_reference == "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface."
+        assert ct.position_confirmation_method == "Histology"
+        assert ct.probe is probe
+        assert ct.probe_insertion is pi
+        assert len(ct) == 2
+        assert ct["contact"].data == [0, 1]
+        assert ct["contact"].table is probe.probe_model.contacts_table
+        assert ct["reference_contact"].data == [2, 2]
+        assert ct["reference_contact"].table is probe.probe_model.contacts_table
+        assert ct["filter"].data == ["High-pass at 300 Hz", "High-pass at 300 Hz"]
+        assert ct["estimated_position_ap_in_mm"].data == [2.0, 2.0]
+        assert ct["estimated_position_ml_in_mm"].data == [-5.0, -4.9]
+        assert ct["estimated_position_dv_in_mm"].data == [-9.5, -9.3]
+        assert ct["estimated_brain_area"].data == ["CA3", "CA3"]
+        assert ct["confirmed_position_ap_in_mm"].data == [2.0, 2.0]
+        assert ct["confirmed_position_ml_in_mm"].data == [-4.9, -4.8]
+        assert ct["confirmed_position_dv_in_mm"].data == [-9.5, -9.3]
+        assert ct["confirmed_brain_area"].data == ["CA3", "CA3"]
 
 
 class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
@@ -468,7 +554,9 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
             description="Test channels table",
-            reference_mode="Reference to channel 2",
+            reference_mode="Referenced to channel 2.",
+            position_reference = "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
+            position_confirmation_method = "Histology",
             probe=probe,
             probe_insertion=pi,
             target_tables={
@@ -482,9 +570,13 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             contact=0,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position_in_mm=[-1.5, 2.5, -2.5],
+            estimated_position_ap_in_mm=2.0,
+            estimated_position_ml_in_mm=-5.0,
+            estimated_position_dv_in_mm=-9.5,
             estimated_brain_area="CA3",
-            confirmed_position_in_mm=[-1.5, 2.4, -2.4],
+            confirmed_position_ap_in_mm=2.0,
+            confirmed_position_ml_in_mm=-4.9,
+            confirmed_position_dv_in_mm=-9.5,
             confirmed_brain_area="CA3",
         )
 
@@ -492,17 +584,15 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             contact=1,
             reference_contact=2,
             filter="High-pass at 300 Hz",
-            estimated_position_in_mm=[-1.5, 2.5, -2.4],
+            estimated_position_ap_in_mm=2.0,
+            estimated_position_ml_in_mm=-4.9,
+            estimated_position_dv_in_mm=-9.3,
             estimated_brain_area="CA3",
-            confirmed_position_in_mm=[-1.5, 2.4, -2.3],
+            confirmed_position_ap_in_mm=2.0,
+            confirmed_position_ml_in_mm=-4.8,
+            confirmed_position_dv_in_mm=-9.3,
             confirmed_brain_area="CA3",
         )
-
-        # TODO might be nice to put this on the constructor of ContactsTable as position__reference
-        # without using a custom mapper
-        # TODO does matching this happen in the container equals roundtrip test?
-        ct["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
-        ct["confirmed_position_in_mm"].reference = "Bregma at the cortical surface"
 
         # put this in nwbfile.acquisition for testing
         self.nwbfile.add_acquisition(ct)
@@ -536,20 +626,24 @@ class TestExtracellularSeries(TestCase):
         es = ExtracellularSeries(
             name="ExtracellularSeries",
             data=[0.0, 1.0, 2.0],
-            timestamps=[0.0, 0.001, 0.0002],
+            timestamps=[0.0, 0.001, 0.002],
             channels=channels,
-            channel_conversion=[1.0, 1.1, 1.2],
+            channel_conversion=[1.1],
             conversion=1e5,
             offset=0.001,
             unit="volts",  # TODO should not have to specify this in init
         )
 
+        assert es.name == "ExtracellularSeries"
+        assert es.data == [0.0, 1.0, 2.0]
+        assert es.timestamps == [0.0, 0.001, 0.002]
+        assert es.channels is channels
+        assert es.channel_conversion == [1.1]
+        assert es.conversion == 1e5
+        assert es.offset == 0.001
         # NOTE: the TimeSeries mapper maps spec "ExtracellularSeries/data/unit" to "ExtracellularSeries.unit"
         assert es.unit == "volts"
         assert es.timestamps_unit == "seconds"
-
-        # TODO
-        # assert ...
 
 
 class TestExtracellularSeriesRoundTrip(NWBH5IOFlexMixin, TestCase):

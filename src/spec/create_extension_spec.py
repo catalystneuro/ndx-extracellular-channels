@@ -8,7 +8,6 @@ from pynwb.spec import (
     NWBAttributeSpec,
     NWBDatasetSpec,
     NWBLinkSpec,
-    NWBDtypeSpec,
 )
 
 
@@ -60,7 +59,8 @@ def main():
                         name="reference",
                         doc=(
                             "Reference point for the relative position coordinates and information about the "
-                            "coordinate system used."
+                            "coordinate system used, e.g., which direction is positive in the x direction "
+                            "(first element), which direction is positive in the y direction (second element), etc."
                         ),
                         dtype="text",
                         required=False,  # TODO should this be required?
@@ -163,7 +163,7 @@ def main():
         neurodata_type_def="ProbeModel",
         neurodata_type_inc="Device",
         doc=("Neural probe object, compatible with the ProbeInterface specification. The name of the object should "
-             "be the model name of the probe, e.g., 'Neuropixels 1.0'."),
+             'be the model name of the probe, e.g., "Neuropixels 1.0".'),
         groups=[
             NWBGroupSpec(
                 name="contacts_table",
@@ -179,7 +179,7 @@ def main():
                 # devices in the NWB file, and users may decide to use a more descriptive name than just
                 # the model name
                 name="model",
-                doc="Name of the model of the probe, e.g., 'Neuropixels 1.0'.",
+                doc='Name of the model of the probe, e.g., "Neuropixels 1.0".',
                 dtype="text",
             ),
             NWBAttributeSpec(
@@ -192,6 +192,7 @@ def main():
                 dtype="float",
                 dims=[["num_points", "x, y"], ["num_points", "x, y, z"]],
                 shape=[[None, 2], [None, 3]],
+                required=False,
             ),
         ],
     )
@@ -206,42 +207,41 @@ def main():
         default_name="probe_insertion",
         attributes=[
             # TODO waiting on https://github.com/hdmf-dev/hdmf/issues/1099 to add these attributes
-            # NWBAttributeSpec(
-            #     name="insertion_position_in_mm",
-            #     doc=(
-            #         "Stereotactic coordinates (AP, ML, DV) of where the probe was inserted, in millimeters. "
-            #         "AP = anteroposterior coordinate in mm (+ is anterior). "
-            #         "ML = mediolateral coordinate in mm (+ is right). "
-            #         "DV = dorsoventral coordinate in mm (+ is up)."
-            #         "Coordinates are relative to `reference`"
-            #     ),
-            #     dtype=[
-            #         NWBDtypeSpec(
-            #             name="ap",
-            #             dtype="float",
-            #             doc="Anteroposterior coordinate in mm, relative to `reference` (+ is anterior).",
-            #         ),
-            #         NWBDtypeSpec(
-            #             name="ml",
-            #             dtype="float",
-            #             doc="Mediolateral coordinate in mm, relative to `reference` (+ is right).",
-            #         ),
-            #         NWBDtypeSpec(
-            #             name="dv",
-            #             dtype="float",
-            #             doc="Dorsoventral coordinate in mm, relative to `reference` (+ is up).",
-            #         ),
-            #     ],
-            #     required=False,
-            # ),
             NWBAttributeSpec(
-                name="reference",
+                name="insertion_position_ap_in_mm",
                 doc=(
-                    "Reference point for `insertion_position_in_mm` coordinates, e.g., "
-                    '"bregma at the cortical surface".'
+                    "Anteroposterior (AP) stereotactic coordinate of where the probe was inserted, in millimeters. "
+                    "+ is anterior. Coordinate is relative to the zero-point described in `position_reference`."
+                ),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="insertion_position_ml_in_mm",
+                doc=(
+                    "Mediolateral (ML) stereotactic coordinate of where the probe was inserted, in millimeters. "
+                    "+ is right. Coordinate is relative to the zero-point described in `position_reference`."
+                ),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="insertion_position_dv_in_mm",
+                doc=(
+                    "Dorsoventral (DV) stereotactic coordinate of where the probe was inserted, in millimeters. "
+                    "+ is up. Coordinate is relative to the zero-point described in `position_reference`."
+                ),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="position_reference",
+                doc=(
+                    "Location of the origin (0, 0, 0) for `insertion_position_{X}_in_mm` coordinates, e.g., "
+                    '"(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface".'
                 ),
                 dtype="text",
-                required=False,  # TODO should this be required?
+                required=False,
             ),
             NWBAttributeSpec(
                 name="hemisphere",  # TODO this is useful to cache but could be done at the API level
@@ -253,42 +253,47 @@ def main():
                 dtype="text",
                 required=False,
             ),
-            # NWBAttributeSpec(
-            #     name="insertion_angle_in_deg",
-            #     doc=(
-            #         "The angles (pitch, yaw, roll) of the probe at the time of insertion, in degrees. "
-            #         "Pitch = rotation around left-right axis, like nodding (+ is rotating the nose upward). "
-            #         "Yaw = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward). "
-            #         "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
-            #         "downward). "
-            #     ),
-            #     dtype=[
-            #         NWBDtypeSpec(
-            #             name="pitch",
-            #             dtype="float",
-            #             doc="Rotation around left-right axis, like nodding (+ is rotating the nose upward).",
-            #         ),
-            #         NWBDtypeSpec(
-            #             name="yaw",
-            #             dtype="float",
-            #             doc="Rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward).",
-            #         ),
-            #         NWBDtypeSpec(
-            #             name="roll",
-            #             dtype="float",
-            #             doc=(
-            #                 "Rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
-            #                 "downward)."
-            #             ),
-            #         ),
-            #     ],
-            #     required=False,
-            # ),
+            NWBAttributeSpec(
+                name="insertion_angle_pitch_in_deg",
+                doc=(
+                    "The pitch angle of the probe at the time of insertion, in degrees. "
+                    "Pitch = rotation around left-right axis, like nodding (+ is rotating the nose upward). "
+                    "Zero is defined as the probe being parallel to an axial slice of the brain."
+                    "Yaw = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward). "
+                    "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
+                    "downward)."
+                ),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="insertion_angle_yaw_in_deg",
+                doc=(
+                    "The yaw angle of the probe at the time of insertion, in degrees. "
+                    "Yaw = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward). "
+                    "Zero is defined as the probe being parallel to an sagittal slice of the brain."
+                ),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="insertion_angle_roll_in_deg",
+                doc=(
+                    "The roll angle of the probe at the time of insertion, in degrees. "
+                    "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
+                    "downward). Zero is defined as the probe being parallel to a coronal slice of the brain. "
+                ),
+                dtype="float",
+                required=False,
+            ),
             NWBAttributeSpec(
                 name="depth_in_mm",
                 doc=(
                     "Depth that the probe was driven along `insertion_angle` starting from "
-                    "`insertion_position_in_mm`, in millimeters."
+                    "`insertion_position_ap_in_mm` and `insertion_position_ml_in_mm`, in millimeters. This is an "
+                    "alternate method of providing the dorsal-ventral coordinate of the probe insertion site. If "
+                    "both `insertion_position_dv_in_mm` and `depth_in_mm` are provided, the values should be "
+                    "consistent."
                 ),
                 dtype="float",
                 required=False,
@@ -328,97 +333,82 @@ def main():
                 dtype="text",
                 doc=(
                     "The filter used on the raw (wideband) voltage data from this contact, including the filter "
-                    "name and frequency cutoffs, e.g., 'High-pass filter at 300 Hz.'"
+                    'name and frequency cutoffs, e.g., "High-pass filter at 300 Hz."'
                 ),
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="estimated_position_in_mm",
+                name="estimated_position_ap_in_mm",
                 neurodata_type_inc="VectorData",
                 doc=(
-                    "Stereotactic coordinates (AP, ML, DV) of the estimated contact position, in millimeters. "
-                    "AP = anteroposterior coordinate in mm (+ is anterior). "
-                    "ML = mediolateral coordinate in mm (+ is right). "
-                    "DV = dorsoventral coordinate in mm (+ is up)."
-                    "Coordinates are relative to `reference`"
+                    "Anteroposterior (AP) stereotactic coordinate of the estimated contact position, in millimeters. "
+                    "+ is anterior. Coordinate is relative to the zero-point described in `position_reference`."
                 ),
-                dtype=[
-                    NWBDtypeSpec(
-                        name="ap",
-                        dtype="float",
-                        doc="Anteroposterior coordinate in mm, relative to `reference` (+ is anterior).",
-                    ),
-                    NWBDtypeSpec(
-                        name="ml",
-                        dtype="float",
-                        doc="Mediolateral coordinate in mm, relative to `reference` (+ is right).",
-                    ),
-                    NWBDtypeSpec(
-                        name="dv",
-                        dtype="float",
-                        doc="Dorsoventral coordinate in mm, relative to `reference` (+ is up).",
-                    ),
-                ],
+                dtype="float",
                 quantity="?",
-                attributes=[
-                    NWBAttributeSpec(
-                        name="reference",
-                        doc=('Reference point for the position coordinates. e.g., "bregma at the cortical surface".'),
-                        dtype="text",
-                        required=False,  # TODO should this be required?
-                    )
-                ],
+            ),
+            NWBDatasetSpec(
+                name="estimated_position_ml_in_mm",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Mediolateral (ML) stereotactic coordinate of the estimated contact position, in millimeters. "
+                    "+ is right. Coordinate is relative to the zero-point described in `position_reference`."
+                ),
+                dtype="float",
+                quantity="?",
+            ),
+            NWBDatasetSpec(
+                name="estimated_position_dv_in_mm",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Dorsoventral (DV) stereotactic coordinate of the estimated contact position, in millimeters. "
+                    "+ is up. Coordinate is relative to the zero-point described in `position_reference`."
+                ),
+                dtype="float",
+                quantity="?",
             ),
             NWBDatasetSpec(
                 name="estimated_brain_area",
                 neurodata_type_inc="VectorData",
                 dtype="text",
-                doc=("The brain area of the estimated contact position, e.g., 'CA1'."),
+                doc=('The brain area of the estimated contact position, e.g., "CA1".'),
                 quantity="?",
             ),
             NWBDatasetSpec(
-                name="confirmed_position_in_mm",
+                name="confirmed_position_ap_in_mm",
                 neurodata_type_inc="VectorData",
                 doc=(
-                    "Stereotactic coordinates (AP, ML, DV) of the the verified actual contact position, such as from "
-                    "histology, in millimeters. "
-                    "AP = anteroposterior coordinate in mm (+ is anterior). "
-                    "ML = mediolateral coordinate in mm (+ is right). "
-                    "DV = dorsoventral coordinate in mm (+ is up)."
-                    "Coordinates are relative to `reference`"
+                    "Anteroposterior (AP) stereotactic coordinate of the confirmed contact position, in millimeters. "
+                    "+ is anterior. Coordinate is relative to the zero-point described in `position_reference`."
                 ),
-                dtype=[
-                    NWBDtypeSpec(
-                        name="ap",
-                        dtype="float",
-                        doc="Anteroposterior coordinate in mm, relative to `reference` (+ is anterior).",
-                    ),
-                    NWBDtypeSpec(
-                        name="ml",
-                        dtype="float",
-                        doc="Mediolateral coordinate in mm, relative to `reference` (+ is right).",
-                    ),
-                    NWBDtypeSpec(
-                        name="dv",
-                        dtype="float",
-                        doc="Dorsoventral coordinate in mm, relative to `reference` (+ is up).",
-                    ),
-                ],
+                dtype="float",
                 quantity="?",
-                attributes=[
-                    NWBAttributeSpec(
-                        name="reference",
-                        doc=('Reference point for the position coordinates. e.g., "bregma at the cortical surface".'),
-                        dtype="text",
-                        required=False,  # TODO should this be required?
-                    )
-                ],
+            ),
+            NWBDatasetSpec(
+                name="confirmed_position_ml_in_mm",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Mediolateral (ML) stereotactic coordinate of the confirmed contact position, in millimeters. "
+                    "+ is right. Coordinate is relative to the zero-point described in `position_reference`."
+                ),
+                dtype="float",
+                quantity="?",
+            ),
+            NWBDatasetSpec(
+                name="confirmed_position_dv_in_mm",
+                neurodata_type_inc="VectorData",
+                doc=(
+                    "Dorsoventral (DV) stereotactic coordinate of the confirmed contact position, in millimeters. "
+                    "+ is up. Coordinate is relative to the zero-point described in `position_reference`."
+                ),
+                dtype="float",
+                quantity="?",
             ),
             NWBDatasetSpec(
                 name="confirmed_brain_area",
                 neurodata_type_inc="VectorData",
                 dtype="text",
-                doc=("The brain area of the actual contact position, e.g., 'CA1'."),
+                doc=('The brain area of the actual contact position, e.g., "CA1".'),
                 quantity="?",
             ),
         ],
@@ -431,8 +421,23 @@ def main():
         ],
         attributes=[
             NWBAttributeSpec(
+                name="position_reference",
+                doc=("Location of the origin (0, 0, 0) for `{X}_position_{Y}_in_mm` coordinates, e.g., "
+                     '"(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface".'),
+                dtype="text",
+                required=False,
+            ),
+            NWBAttributeSpec(
                 name="reference_mode",
-                doc="The reference mode used for the recording; e.g. 'external wire', 'common reference'.",
+                doc=('The reference mode used for the recording; e.g., "external wire in CSF", '
+                     'common reference", "skull screw over frontal cortex".'),
+                dtype="text",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="position_confirmation_method",
+                doc=("Description of the method used to confirm the position of the contacts or brain area, "
+                     'e.g., "histology", "MRI".'),
                 dtype="text",
                 required=False,
             ),

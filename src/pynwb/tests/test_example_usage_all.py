@@ -71,17 +71,22 @@ probe = Probe(
 nwbfile.add_device(probe)
 
 pi = ProbeInsertion(
-    reference="Bregma at the cortical surface.",
+    position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
     hemisphere="left",
-    depth_in_mm=10.0,
-    # insertion_position_in_mm=[2.0, -4.0, 0.0],  # TODO waiting on schema
-    # insertion_angle_in_deg=[0.0, 0.0, -10.0],
+    depth_in_mm=10.0,  # recommended to provide either `depth_in_mm` or `insertion_position_dv_in_mm`
+    insertion_position_ap_in_mm=2.0,
+    insertion_position_ml_in_mm=-4.0,
+    insertion_angle_roll_in_deg=-10.0,
+    insertion_angle_pitch_in_deg=0.0,
+    insertion_angle_yaw_in_deg=0.0,
 )
 
 channels_table = ChannelsTable(
     name="Neuropixels1ChannelsTable",  # test custom name
     description="Test channels table",
-    reference_mode="Reference to channel 2",
+    reference_mode="Referenced to channel 2.",
+    position_reference = "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
+    position_confirmation_method = "Histology",
     probe=probe,
     probe_insertion=pi,
     target_tables={
@@ -96,22 +101,28 @@ channels_table.add_row(
     contact=0,
     reference_contact=2,
     filter="High-pass at 300 Hz",
-    estimated_position_in_mm=[-1.5, 2.5, -2.5],
+    estimated_position_ap_in_mm=2.0,
+    estimated_position_ml_in_mm=-5.0,
+    estimated_position_dv_in_mm=-9.5,
     estimated_brain_area="CA3",
-    confirmed_position_in_mm=[-1.5, 2.4, -2.4],
+    confirmed_position_ap_in_mm=2.0,
+    confirmed_position_ml_in_mm=-4.9,
+    confirmed_position_dv_in_mm=-9.5,
     confirmed_brain_area="CA3",
 )
 channels_table.add_row(
     contact=1,
     reference_contact=2,
     filter="High-pass at 300 Hz",
-    estimated_position_in_mm=[-1.5, 2.5, -2.4],
+    estimated_position_ap_in_mm=2.0,
+    estimated_position_ml_in_mm=-4.9,
+    estimated_position_dv_in_mm=-9.3,
     estimated_brain_area="CA3",
-    confirmed_position_in_mm=[-1.5, 2.4, -2.3],
+    confirmed_position_ap_in_mm=2.0,
+    confirmed_position_ml_in_mm=-4.8,
+    confirmed_position_dv_in_mm=-9.3,
     confirmed_brain_area="CA3",
 )
-channels_table["estimated_position_in_mm"].reference = "Bregma at the cortical surface"
-channels_table["confirmed_position_in_mm"].reference = "Bregma at the cortical surface"
 
 # put this in nwbfile.acquisition for testing
 nwbfile.add_acquisition(channels_table)
