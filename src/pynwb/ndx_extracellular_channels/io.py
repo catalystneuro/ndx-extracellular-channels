@@ -17,8 +17,8 @@ inverted_unit_map = {v: k for k, v in unit_map.items()}
 
 
 def from_probeinterface(
-        probe_or_probegroup: Union[probeinterface.Probe, probeinterface.ProbeGroup],
-        name: Union[str, list] = None,
+    probe_or_probegroup: Union[probeinterface.Probe, probeinterface.ProbeGroup],
+    name: Union[str, list] = None,
 ) -> List[ndx_extracellular_channels.Probe]:
     """
     Construct ndx-extracellular-channels Probe objects from a probeinterface.Probe or probeinterface.ProbeGroup.
@@ -43,8 +43,9 @@ def from_probeinterface(
             "To use the probeinterface conversion functions, install probeinterface: pip install probeinterface"
         )
 
-    assert isinstance(probe_or_probegroup, (probeinterface.Probe, probeinterface.ProbeGroup)), \
-        f"The input must be a Probe or ProbeGroup, not {type(probe_or_probegroup)}."
+    assert isinstance(
+        probe_or_probegroup, (probeinterface.Probe, probeinterface.ProbeGroup)
+    ), f"The input must be a Probe or ProbeGroup, not {type(probe_or_probegroup)}."
     if isinstance(probe_or_probegroup, probeinterface.Probe):
         probes = [probe_or_probegroup]
     else:
@@ -155,8 +156,7 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
 
 
 def _single_probe_to_ndx_probe(
-        probe: probeinterface.Probe,
-        name: Union[str, None] = None
+    probe: probeinterface.Probe, name: Union[str, None] = None
 ) -> ndx_extracellular_channels.Probe:
     contacts_arr = probe.to_numpy()
 

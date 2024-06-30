@@ -78,13 +78,15 @@ def main():
                 # NOTE: cannot end this name with "_index" because it conflicts with ragged arrays
                 name="device_channel",
                 neurodata_type_inc="VectorData",
-                doc=("Index of the channel connected to the contact on the device. "
-                     "Probes can have a complex contact indexing system due to the probe layout. "
-                     "When they are plugged into a recording device like an Open Ephys with an Intan headstage, "
-                     "the channel order can be mixed again. So the physical contact channel index "
-                     "is rarely the channel index on the device. See the probeinterface tutorial on automatic "
-                     "wiring for an example: "
-                     "https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py"),
+                doc=(
+                    "Index of the channel connected to the contact on the device. "
+                    "Probes can have a complex contact indexing system due to the probe layout. "
+                    "When they are plugged into a recording device like an Open Ephys with an Intan headstage, "
+                    "the channel order can be mixed again. So the physical contact channel index "
+                    "is rarely the channel index on the device. See the probeinterface tutorial on automatic "
+                    "wiring for an example: "
+                    "https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py"
+                ),
                 dtype="int",
                 quantity="?",
             ),
@@ -162,8 +164,10 @@ def main():
     probe_model = NWBGroupSpec(
         neurodata_type_def="ProbeModel",
         neurodata_type_inc="Device",
-        doc=("Neural probe object, compatible with the ProbeInterface specification. The name of the object should "
-             'be the model name of the probe, e.g., "Neuropixels 1.0".'),
+        doc=(
+            "Neural probe object, compatible with the ProbeInterface specification. The name of the object should "
+            'be the model name of the probe, e.g., "Neuropixels 1.0".'
+        ),
         groups=[
             NWBGroupSpec(
                 name="contacts_table",
@@ -184,11 +188,13 @@ def main():
             ),
             NWBAttributeSpec(
                 name="planar_contour_in_um",  # TODO should this just be "contour"?
-                doc=("The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
-                     "in micrometers. The first and last points are connected to close the polygon. "
-                     "e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]."
-                     "See 'probe_planar_contour' in "
-                     "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."),
+                doc=(
+                    "The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
+                    "in micrometers. The first and last points are connected to close the polygon. "
+                    "e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]."
+                    "See 'probe_planar_contour' in "
+                    "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."
+                ),
                 dtype="float",
                 dims=[["num_points", "x, y"], ["num_points", "x, y, z"]],
                 shape=[[None, 2], [None, 3]],
@@ -422,22 +428,28 @@ def main():
         attributes=[
             NWBAttributeSpec(
                 name="position_reference",
-                doc=("Location of the origin (0, 0, 0) for `{X}_position_{Y}_in_mm` coordinates, e.g., "
-                     '"(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface".'),
+                doc=(
+                    "Location of the origin (0, 0, 0) for `{X}_position_{Y}_in_mm` coordinates, e.g., "
+                    '"(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface".'
+                ),
                 dtype="text",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="reference_mode",
-                doc=('The reference mode used for the recording; e.g., "external wire in CSF", '
-                     'common reference", "skull screw over frontal cortex".'),
+                doc=(
+                    'The reference mode used for the recording; e.g., "external wire in CSF", '
+                    'common reference", "skull screw over frontal cortex".'
+                ),
                 dtype="text",
                 required=False,
             ),
             NWBAttributeSpec(
                 name="position_confirmation_method",
-                doc=("Description of the method used to confirm the position of the contacts or brain area, "
-                     'e.g., "histology", "MRI".'),
+                doc=(
+                    "Description of the method used to confirm the position of the contacts or brain area, "
+                    'e.g., "histology", "MRI".'
+                ),
                 dtype="text",
                 required=False,
             ),

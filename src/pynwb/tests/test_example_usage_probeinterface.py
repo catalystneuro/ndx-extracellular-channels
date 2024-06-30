@@ -5,6 +5,7 @@ import probeinterface
 import pynwb
 import uuid
 
+
 def test_from_probeinterface():
 
     # following the probeinterface tutorial, create a few probes
@@ -27,7 +28,7 @@ def test_from_probeinterface():
     )
     probe0.set_contacts(positions=positions, shapes="circle", shape_params={"radius": 5})
 
-    polygon = [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]
+    polygon = [(-20.0, -30.0), (20.0, -110.0), (60.0, -30.0), (60.0, 190.0), (-20.0, 190.0)]
     probe0.set_planar_contour(polygon)
 
     probe1 = probeinterface.generate_dummy_probe(elec_shapes="circle")
@@ -81,8 +82,14 @@ def test_from_probeinterface():
     with pynwb.NWBHDF5IO("test_probeinterface.nwb", "r", load_namespaces=True) as io:
         nwbfile = io.read()
         assert set(nwbfile.devices.keys()) == {
-            "probe0", "probe1", "probe2", "probe3", "a1x32-edge-5mm-20-177_H32", "Dummy Neuropixels 1.0",
-            "Dummy Neuropixels 2.0", "Dummy Neuropixels 3.0"
+            "probe0",
+            "probe1",
+            "probe2",
+            "probe3",
+            "a1x32-edge-5mm-20-177_H32",
+            "Dummy Neuropixels 1.0",
+            "Dummy Neuropixels 2.0",
+            "Dummy Neuropixels 3.0",
         }
         for device in nwbfile.devices.values():
             assert isinstance(device, (ndx_extracellular_channels.ProbeModel, ndx_extracellular_channels.Probe))
@@ -103,7 +110,7 @@ def test_from_probeinterface():
         assert np.all(nwbfile.devices["probe0"].probe_model.planar_contour_in_um == polygon)
         assert np.allclose(nwbfile.devices["probe0"].probe_model.contacts_table.relative_position_in_mm, positions)
         assert np.all(nwbfile.devices["probe0"].probe_model.contacts_table["shape"].data[:] == "circle")
-        assert np.all(nwbfile.devices["probe0"].probe_model.contacts_table["radius_in_um"].data[:] == 5.)
+        assert np.all(nwbfile.devices["probe0"].probe_model.contacts_table["radius_in_um"].data[:] == 5.0)
 
         assert nwbfile.devices["probe1"].name == "probe1"
         assert nwbfile.devices["probe1"].identifier == "1000"
@@ -111,9 +118,13 @@ def test_from_probeinterface():
         assert nwbfile.devices["probe1"].probe_model.manufacturer == "IMEC"
         assert nwbfile.devices["probe1"].probe_model.ndim == 2
         assert np.allclose(nwbfile.devices["probe1"].probe_model.planar_contour_in_um, probe1.probe_planar_contour)
-        assert np.allclose(nwbfile.devices["probe1"].probe_model.contacts_table.relative_position_in_mm, probe1.contact_positions)
+        assert np.allclose(
+            nwbfile.devices["probe1"].probe_model.contacts_table.relative_position_in_mm, probe1.contact_positions
+        )
         assert np.all(nwbfile.devices["probe1"].probe_model.contacts_table["shape"].data[:] == "circle")
-        assert np.all(nwbfile.devices["probe1"].probe_model.contacts_table["radius_in_um"].data[:] == probe1.to_numpy()["radius"])
+        assert np.all(
+            nwbfile.devices["probe1"].probe_model.contacts_table["radius_in_um"].data[:] == probe1.to_numpy()["radius"]
+        )
 
         assert nwbfile.devices["probe2"].name == "probe2"
         assert nwbfile.devices["probe2"].identifier == "1001"
@@ -121,9 +132,13 @@ def test_from_probeinterface():
         assert nwbfile.devices["probe2"].probe_model.manufacturer == "IMEC"
         assert nwbfile.devices["probe2"].probe_model.ndim == 2
         assert np.allclose(nwbfile.devices["probe2"].probe_model.planar_contour_in_um, probe2.probe_planar_contour)
-        assert np.allclose(nwbfile.devices["probe2"].probe_model.contacts_table.relative_position_in_mm, probe2.contact_positions)
+        assert np.allclose(
+            nwbfile.devices["probe2"].probe_model.contacts_table.relative_position_in_mm, probe2.contact_positions
+        )
         assert np.all(nwbfile.devices["probe2"].probe_model.contacts_table["shape"].data[:] == "square")
-        assert np.all(nwbfile.devices["probe2"].probe_model.contacts_table["width_in_um"].data[:] == probe2.to_numpy()["width"])
+        assert np.all(
+            nwbfile.devices["probe2"].probe_model.contacts_table["width_in_um"].data[:] == probe2.to_numpy()["width"]
+        )
 
         assert nwbfile.devices["probe3"].name == "probe3"
         assert nwbfile.devices["probe3"].identifier == "1002"
@@ -131,9 +146,13 @@ def test_from_probeinterface():
         assert nwbfile.devices["probe3"].probe_model.manufacturer == "IMEC"
         assert nwbfile.devices["probe3"].probe_model.ndim == 2
         assert np.allclose(nwbfile.devices["probe3"].probe_model.planar_contour_in_um, probe3.probe_planar_contour)
-        assert np.allclose(nwbfile.devices["probe3"].probe_model.contacts_table.relative_position_in_mm, probe3.contact_positions)
+        assert np.allclose(
+            nwbfile.devices["probe3"].probe_model.contacts_table.relative_position_in_mm, probe3.contact_positions
+        )
         assert np.all(nwbfile.devices["probe3"].probe_model.contacts_table["shape"].data[:] == "circle")
-        assert np.all(nwbfile.devices["probe3"].probe_model.contacts_table["radius_in_um"].data[:] == probe3.to_numpy()["radius"])
+        assert np.all(
+            nwbfile.devices["probe3"].probe_model.contacts_table["radius_in_um"].data[:] == probe3.to_numpy()["radius"]
+        )
 
         # for device in nwbfile.devices.values():
         #     print("-------------------")

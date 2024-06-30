@@ -85,8 +85,8 @@ channels_table = ChannelsTable(
     name="Neuropixels1ChannelsTable",  # test custom name
     description="Test channels table",
     reference_mode="Referenced to channel 2.",
-    position_reference = "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
-    position_confirmation_method = "Histology",
+    position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
+    position_confirmation_method="Histology",
     probe=probe,
     probe_insertion=pi,
     target_tables={
