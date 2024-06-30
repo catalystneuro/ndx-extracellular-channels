@@ -73,7 +73,7 @@ nwbfile.add_device(probe)
 pi = ProbeInsertion(
     position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
     hemisphere="left",
-    depth_in_mm=10.0,  # recommended to provide either `depth_in_mm` or `insertion_position_dv_in_mm`
+    depth_in_mm=10.0,
     insertion_position_ap_in_mm=2.0,
     insertion_position_ml_in_mm=-4.0,
     insertion_angle_roll_in_deg=-10.0,

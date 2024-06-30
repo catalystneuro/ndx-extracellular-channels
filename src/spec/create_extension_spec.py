@@ -235,7 +235,8 @@ def main():
                 name="insertion_position_dv_in_mm",
                 doc=(
                     "Dorsoventral (DV) stereotactic coordinate of where the probe was inserted, in millimeters. "
-                    "+ is up. Coordinate is relative to the zero-point described in `position_reference`."
+                    "+ is up. Coordinate is relative to the zero-point described in `position_reference`. The "
+                    "zero-point is typically the surface of the brain, so this value is typically 0."
                 ),
                 dtype="float",
                 required=False,
@@ -244,10 +245,7 @@ def main():
                 name="depth_in_mm",
                 doc=(
                     "Depth that the probe was driven along `insertion_angle` starting from "
-                    "`insertion_position_ap_in_mm` and `insertion_position_ml_in_mm`, in millimeters. This is an "
-                    "alternate method of providing the dorsal-ventral coordinate of the probe insertion site. If "
-                    "both `insertion_position_dv_in_mm` and `depth_in_mm` are provided, the values should be "
-                    "consistent."
+                    "`insertion_position_{X}_in_mm`, in millimeters."
                 ),
                 dtype="float",
                 required=False,
