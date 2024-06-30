@@ -58,10 +58,10 @@ def from_probeinterface(
     else:
         names = [None] * len(probes)
 
-    ndx_probe_models = []
+    ndx_probes = []
     for probe, name in zip(probes, names):
-        ndx_probe_models.append(_single_probe_to_ndx_probe(probe, name))
-    return ndx_probe_models
+        ndx_probes.append(_single_probe_to_ndx_probe(probe, name))
+    return ndx_probes
 
 
 def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinterface.Probe:
@@ -173,7 +173,6 @@ def _single_probe_to_ndx_probe(
         for k in keys:
             if k not in shape_keys:
                 shape_keys.append(k)
-
 
     contacts_table = ndx_extracellular_channels.ContactsTable(
         description="Contacts Table, populated by ProbeInterface",
