@@ -212,7 +212,6 @@ def main():
         ),
         default_name="probe_insertion",
         attributes=[
-            # TODO waiting on https://github.com/hdmf-dev/hdmf/issues/1099 to add these attributes
             NWBAttributeSpec(
                 name="insertion_position_ap_in_mm",
                 doc=(
@@ -260,7 +259,7 @@ def main():
                 required=False,
             ),
             NWBAttributeSpec(
-                name="hemisphere",  # TODO this is useful to cache but could be done at the API level
+                name="hemisphere",  # NOTE this is useful to cache but could be done at the API level
                 doc=(
                     'The hemisphere ("left" or "right") of the targeted location of the optogenetic stimulus site. '
                     "Should be consistent with `insertion_position_in_mm.ml` coordinate (left = ml < 0, "
