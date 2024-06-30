@@ -1,0 +1,27 @@
+namespaces:
+- author:
+  - Alessio Buccino
+  - Kyu Hyun Lee
+  - Ramon Heberto Mayorquin
+  - Cody Baker
+  - Matt Avaylon
+  - Ryan Ly
+  - Ben Dichter
+  - Oliver Ruebel
+  - Geeling Chau
+  contact:
+  - alessio.buccino@alleninstitute.org
+  - kyuhyun.lee@ucsf.edu
+  - ramon.mayorquin@catalystneuro.com
+  - cody.baker@catalystneuro.com
+  - mavaylon@lbl.gov
+  - rly@lbl.gov
+  - ben.dichter@catalystneuro.com
+  - oruebel@lbl.gov
+  - gchau@caltech.edu
+  doc: NWB extension for storing extracellular probe and channels metadata
+  name: ndx-extracellular-channels
+  schema:
+  - namespace: core
+  - source: ndx-extracellular-channels.extensions.yaml
+  version: 0.1.0
