@@ -27,14 +27,20 @@ groups:
         (first element), which direction is positive in the y direction (second element),
         etc.
       required: false
-  - name: shape
-    neurodata_type_inc: VectorData
-    dtype: text
-    doc: Shape of the contact; e.g. 'circle'
   - name: contact_id
     neurodata_type_inc: VectorData
     dtype: text
     doc: Unique ID of the contact
+    quantity: '?'
+  - name: device_channel
+    neurodata_type_inc: VectorData
+    dtype: int
+    doc: 'Index of the channel connected to the contact on the device. Probes can
+      have a complex contact indexing system due to the probe layout. When they are
+      plugged into a recording device like an Open Ephys with an Intan headstage,
+      the channel order can be mixed again. So the physical contact channel index
+      is rarely the channel index on the device. See the probeinterface tutorial on
+      automatic wiring for an example: https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py'
     quantity: '?'
   - name: shank_id
     neurodata_type_inc: VectorData
@@ -61,6 +67,10 @@ groups:
     doc: The axes defining the contact plane. See 'contact_plane_axes' in https://probeinterface.readthedocs.io/en/main/format_spec.html
       for more details.
     quantity: '?'
+  - name: shape
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: Shape of the contact; e.g. 'circle'
   - name: radius_in_um
     neurodata_type_inc: VectorData
     dtype: float
@@ -75,16 +85,6 @@ groups:
     neurodata_type_inc: VectorData
     dtype: float
     doc: Height of a rectangular contact, in micrometers.
-    quantity: '?'
-  - name: device_channel
-    neurodata_type_inc: VectorData
-    dtype: int
-    doc: 'Index of the channel connected to the contact on the device. Probes can
-      have a complex contact indexing system due to the probe layout. When they are
-      plugged into a recording device like an Open Ephys with an Intan headstage,
-      the channel order can be mixed again. So the physical contact channel index
-      is rarely the channel index on the device. See the probeinterface tutorial on
-      automatic wiring for an example: https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py'
     quantity: '?'
 - neurodata_type_def: ProbeModel
   neurodata_type_inc: Device
@@ -157,6 +157,14 @@ groups:
       in millimeters. + is up. Coordinate is relative to the zero-point described
       in `position_reference`.
     required: false
+  - name: depth_in_mm
+    dtype: float
+    doc: Depth that the probe was driven along `insertion_angle` starting from `insertion_position_ap_in_mm`
+      and `insertion_position_ml_in_mm`, in millimeters. This is an alternate method
+      of providing the dorsal-ventral coordinate of the probe insertion site. If both
+      `insertion_position_dv_in_mm` and `depth_in_mm` are provided, the values should
+      be consistent.
+    required: false
   - name: position_reference
     dtype: text
     doc: Location of the origin (0, 0, 0) for `insertion_position_{X}_in_mm` coordinates,
@@ -189,14 +197,6 @@ groups:
       rotation around anterior-posterior axis, like tilting (+ is rotating the right
       side downward). Zero is defined as the probe being parallel to a coronal slice
       of the brain. '
-    required: false
-  - name: depth_in_mm
-    dtype: float
-    doc: Depth that the probe was driven along `insertion_angle` starting from `insertion_position_ap_in_mm`
-      and `insertion_position_ml_in_mm`, in millimeters. This is an alternate method
-      of providing the dorsal-ventral coordinate of the probe insertion site. If both
-      `insertion_position_dv_in_mm` and `depth_in_mm` are provided, the values should
-      be consistent.
     required: false
 - neurodata_type_def: ChannelsTable
   neurodata_type_inc: DynamicTable

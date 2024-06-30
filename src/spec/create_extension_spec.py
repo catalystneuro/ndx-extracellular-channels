@@ -68,16 +68,24 @@ def main():
                 ],
             ),
             NWBDatasetSpec(
-                name="shape",
-                neurodata_type_inc="VectorData",
-                doc="Shape of the contact; e.g. 'circle'",
-                dtype="text",
-            ),
-            NWBDatasetSpec(
                 name="contact_id",  # id is already used by DynamicTable
                 neurodata_type_inc="VectorData",
                 doc="Unique ID of the contact",
                 dtype="text",
+                quantity="?",
+            ),
+            NWBDatasetSpec(
+                # NOTE: cannot end this name with "_index" because it conflicts with ragged arrays
+                name="device_channel",
+                neurodata_type_inc="VectorData",
+                doc=("Index of the channel connected to the contact on the device. "
+                     "Probes can have a complex contact indexing system due to the probe layout. "
+                     "When they are plugged into a recording device like an Open Ephys with an Intan headstage, "
+                     "the channel order can be mixed again. So the physical contact channel index "
+                     "is rarely the channel index on the device. See the probeinterface tutorial on automatic "
+                     "wiring for an example: "
+                     "https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py"),
+                dtype="int",
                 quantity="?",
             ),
             NWBDatasetSpec(
@@ -101,6 +109,12 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
+                name="shape",
+                neurodata_type_inc="VectorData",
+                doc="Shape of the contact; e.g. 'circle'",
+                dtype="text",
+            ),
+            NWBDatasetSpec(
                 name="radius_in_um",
                 neurodata_type_inc="VectorData",
                 doc="Radius of a circular contact, in micrometers.",
@@ -119,20 +133,6 @@ def main():
                 neurodata_type_inc="VectorData",
                 doc="Height of a rectangular contact, in micrometers.",
                 dtype="float",
-                quantity="?",
-            ),
-            NWBDatasetSpec(
-                # NOTE: cannot end this name with "_index" because it conflicts with ragged arrays
-                name="device_channel",
-                neurodata_type_inc="VectorData",
-                doc=("Index of the channel connected to the contact on the device. "
-                     "Probes can have a complex contact indexing system due to the probe layout. "
-                     "When they are plugged into a recording device like an Open Ephys with an Intan headstage, "
-                     "the channel order can be mixed again. So the physical contact channel index "
-                     "is rarely the channel index on the device. See the probeinterface tutorial on automatic "
-                     "wiring for an example: "
-                     "https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py"),
-                dtype="int",
                 quantity="?",
             ),
         ],
@@ -235,6 +235,18 @@ def main():
                 required=False,
             ),
             NWBAttributeSpec(
+                name="depth_in_mm",
+                doc=(
+                    "Depth that the probe was driven along `insertion_angle` starting from "
+                    "`insertion_position_ap_in_mm` and `insertion_position_ml_in_mm`, in millimeters. This is an "
+                    "alternate method of providing the dorsal-ventral coordinate of the probe insertion site. If "
+                    "both `insertion_position_dv_in_mm` and `depth_in_mm` are provided, the values should be "
+                    "consistent."
+                ),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
                 name="position_reference",
                 doc=(
                     "Location of the origin (0, 0, 0) for `insertion_position_{X}_in_mm` coordinates, e.g., "
@@ -282,18 +294,6 @@ def main():
                     "The roll angle of the probe at the time of insertion, in degrees. "
                     "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
                     "downward). Zero is defined as the probe being parallel to a coronal slice of the brain. "
-                ),
-                dtype="float",
-                required=False,
-            ),
-            NWBAttributeSpec(
-                name="depth_in_mm",
-                doc=(
-                    "Depth that the probe was driven along `insertion_angle` starting from "
-                    "`insertion_position_ap_in_mm` and `insertion_position_ml_in_mm`, in millimeters. This is an "
-                    "alternate method of providing the dorsal-ventral coordinate of the probe insertion site. If "
-                    "both `insertion_position_dv_in_mm` and `depth_in_mm` are provided, the values should be "
-                    "consistent."
                 ),
                 dtype="float",
                 required=False,

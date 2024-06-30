@@ -79,10 +79,14 @@ classDiagram
     direction LR
 
     class ExtracellularSeries {
-        <<ElectricalSeries>>
+        <<TimeSeries>>
 
+        data : numeric
+        --> unit : str = "microvolts"
         channels : DynamicTableRegion
         --> target : ChannelsTable
+        channel_conversion : List[float], optional
+        --> axis : int = 1
     }
 
     class ChannelsTable{
@@ -94,38 +98,46 @@ classDiagram
         description : str
         probe : ProbeModel
         probe_insertion : ProbeInsertion, optional
-        contacts : DynamicTableRegion, optional?
-        --> target : ContactsTable
-        reference_contact :  DynamicTableRegion, optional
-        --> target : ContactsTable
-        reference_mode : Literal["external wire", ...], optional
+        position_reference : str, optional
+        reference_mode : str, optional
+        position_confirmation_method : str, optional
 
         --------------------------------------
         columns
         --------------------------------------
-        id : int
-        filter : VectorData, optional
-        ---> Values strings such as "Bandpass 0-300 Hz".
-        contact_position [x, y, z] : VectorData, optional
-        ---> Each value is length 3 tuple of floats.
-        brain_area : VectorData, optional
-        --> data : str
-        ----> Plays the role of the old 'location'.
-        ... Any other custom columns, such analong frontend e.g. ADC information
+        id : VectorData[int]
+        contact : DynamicTableRegion, optional
+        --> target : ContactsTable
+        reference_contact :  DynamicTableRegion, optional
+        --> target : ContactsTable
+        filter : VectorData[str], optional
+        ---> Strings such as "Bandpass 0-300 Hz".
+        estimated_position_ap_in_mm : VectorData[float], optional
+        estimated_position_ml_in_mm : VectorData[float], optional
+        estimated_position_dv_in_mm : VectorData[float], optional
+        estimated_brain_area : VectorData[str], optional
+        confirmed_position_ap_in_mm : VectorData[float], optional
+        confirmed_position_ml_in_mm : VectorData[float], optional
+        confirmed_position_dv_in_mm : VectorData[float], optional
+        confirmed_brain_area : VectorData[str], optional
+        ... Any other custom columns, e.g., ADC information
     }
 
     class ProbeInsertion {
         <<Container>>
-
-        insertion_position : Tuple[float, float, float], optional
-        ----> Stereotactic coordinates on surface.
+        insertion_position_ap_in_mm : float, optional
+        insertion_position_ml_in_mm : float, optional
+        insertion_position_dv_in_mm : float, optional
+        position_reference : str, optional
+        hemisphere : Literal["left", "right"], optional
+        insertion_angle_pitch_in_deg : float, optional
+        insertion_angle_roll_in_deg : float, optional
+        insertion_angle_yaw_in_deg : float, optional
         depth_in_um : float, optional
-        insertion_angle : Tuple[float, float, float], optional
-        ----> The pitch/roll/yaw relative to the position on the surface.
     }
 
 
-    namespace ProbeInterface{
+    namespace ProbeInterface {
         class Probe {
                 <<Device>>
 
@@ -135,16 +147,17 @@ classDiagram
             }
 
             class ProbeModel {
-                <<Not sure what type>>
+                <<Device>>
 
                 name : str
                 manufacturer : str
                 model : str
-                contour : List[Tuple[float, float], Tuple[float, float, float]]
-                contact_table : ContactsTable
+                ndim : int, optional
+                planar_contour_in_um : List[Tuple[float, float], Tuple[float, float, float]], optional
+                contacts_table : ContactsTable
             }
 
-            class ContactTable {
+            class ContactsTable {
                 <<DynamicTable>>
 
                 --------------------------------------
@@ -156,23 +169,25 @@ classDiagram
                 --------------------------------------
                 columns
                 --------------------------------------
-                id : int
-                shape : str, optional
-                size : str, optional
-                shank_id : str, optional
-                relative_position : List[Tuple[float, float], Tuple[float, float, float]], optional
+                id : VectorData[int]
+                relative_position_in_mm : List[Tuple[float, float], Tuple[float, float, float]]
+                --> reference : str, optional
+                contact_id : VectorData[str], optional
+                device_channel : VectorData[int], optional
+                shank_id : VectorData[str], optional
+                plane_axes : List[Tuple[int, int], Tuple[int, int, int]], optional
+                shape : VectorData[str], optional
+                radius_in_um : VectorData[float], optional
+                width_in_um : VectorData[float], optional
+                height_in_um : VectorData[float], optional
             }
     }
 
-
-
-    ExtracellularSeries ..> ChannelsTable : links with channels
-    ProbeModel *--> ContactTable : contains
-    Probe *..> ProbeModel : links with probe_model
-    ChannelsTable *..> Probe : links  with probe
-
-    ChannelsTable ..> ContactTable : links with contacts
-
+    Probe *..> ProbeModel : links to probe_model
+    ProbeModel *--> ContactsTable : contains
+    ExtracellularSeries ..> ChannelsTable : links to channels
+    ChannelsTable *..> Probe : links to probe
+    ChannelsTable ..> ContactTable : links to contacts
     ChannelsTable *--> ProbeInsertion: might contain ProbeInsertion
     note for ChannelsTable "ChannelsTable is no longer global"
 ```
