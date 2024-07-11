@@ -67,7 +67,24 @@ def from_probeinterface(
 
 def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinterface.Probe:
     """
-    Construct a probeinterface.Probe from a ndx_extracellular_channels.Probe
+    Construct a probeinterface.Probe from a ndx_extracellular_channels.Probe.
+
+    ndx_extracellular_channels.Probe.name -> probeinterface.Probe.name
+    ndx_extracellular_channels.Probe.identifier -> probeinterface.Probe.serial_number
+    ndx_extracellular_channels.Probe.probe_model.name -> probeinterface.Probe.model_name
+    ndx_extracellular_channels.Probe.probe_model.manufacturer -> probeinterface.Probe.manufacturer
+    ndx_extracellular_channels.Probe.probe_model.ndim -> probeinterface.Probe.ndim
+    ndx_extracellular_channels.Probe.probe_model.planar_contour_in_um -> probeinterface.Probe.probe_planar_contour
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["relative_position_in_mm"] ->
+        probeinterface.Probe.contact_positions
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["shape"] -> probeinterface.Probe.contact_shapes
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["contact_id"] -> probeinterface.Probe.contact_ids
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["device_channel"] ->
+        probeinterface.Probe.device_channel_indices
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["shank_id"] -> probeinterface.Probe.shank_ids
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["plane_axes"] -> probeinterface.Probe.contact_plane_axes
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["radius_in_um"] -> probeinterface.Probe.contact_shapes["radius"]
+
 
     Parameters
     ----------
@@ -89,12 +106,11 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
     shapes = []
 
     contact_ids = None
-    shape_params = None
     shank_ids = None
     plane_axes = None
     device_channel_indices = None
 
-    possible_shape_keys = ["radius", "width", "height"]
+    possible_shape_keys = ["radius_in_um", "width_in_um", "height_in_um"]
     contacts_table = ndx_probe.probe_model.contacts_table
 
     positions.append(contacts_table["relative_position_in_mm"][:])
@@ -115,11 +131,6 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
         if shank_ids is None:
             shank_ids = []
         shank_ids.append(contacts_table["shank_id"][:])
-    for possible_shape_key in possible_shape_keys:
-        if possible_shape_key in contacts_table.colnames:
-            if shape_params is None:
-                shape_params = []
-            shape_params.append([{possible_shape_key: val} for val in contacts_table[possible_shape_key][:]])
 
     positions = [item for sublist in positions for item in sublist]
     shapes = [item for sublist in shapes for item in sublist]
@@ -128,12 +139,21 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
         contact_ids = [item for sublist in contact_ids for item in sublist]
     if plane_axes is not None:
         plane_axes = [item for sublist in plane_axes for item in sublist]
-    if shape_params is not None:
-        shape_params = [item for sublist in shape_params for item in sublist]
     if shank_ids is not None:
         shank_ids = [item for sublist in shank_ids for item in sublist]
     if device_channel_indices is not None:
         device_channel_indices = [item for sublist in device_channel_indices for item in sublist]
+
+    # if there are multiple shape keys, e.g., radius, width, and height
+    # we need to create a list of dicts, one for each contact
+    shape_params = [dict() for _ in range(len(contacts_table))]
+    for i in range(len(contacts_table)):
+        for possible_shape_key in possible_shape_keys:
+            if possible_shape_key in contacts_table.colnames:
+                new_key = possible_shape_key.replace("_in_um", "")
+                shape_params[i][new_key] = contacts_table[possible_shape_key][i]
+
+    print(shape_params)
 
     probeinterface_probe = probeinterface.Probe(
         ndim=ndx_probe.probe_model.ndim,
