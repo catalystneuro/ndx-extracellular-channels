@@ -1,5 +1,6 @@
 import os
-from pynwb import load_namespaces, get_class
+
+from pynwb import get_class, load_namespaces
 
 try:
     from importlib.resources import files

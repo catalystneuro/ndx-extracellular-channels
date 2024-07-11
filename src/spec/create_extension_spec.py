@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
 import os.path
 
-from pynwb.spec import (
-    NWBNamespaceBuilder,
-    export_spec,
-    NWBGroupSpec,
-    NWBAttributeSpec,
-    NWBDatasetSpec,
-    NWBLinkSpec,
-)
+from pynwb.spec import NWBAttributeSpec, NWBDatasetSpec, NWBGroupSpec, NWBLinkSpec, NWBNamespaceBuilder, export_spec
 
 
 def main():

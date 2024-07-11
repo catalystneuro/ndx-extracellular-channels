@@ -45,8 +45,9 @@ intersphinx_mapping = {
 #  CUSTOM CONFIGURATIONS ADDED BY THE NWB TOOL FOR GENERATING FORMAT DOCS
 ###########################################################################
 
-import sphinx_rtd_theme  # noqa: E402
 import textwrap  # noqa: E402
+
+import sphinx_rtd_theme  # noqa: E402
 
 # -- Options for intersphinx  ---------------------------------------------
 intersphinx_mapping.update({
@@ -61,8 +62,8 @@ spec_doc_rebuild_always = True
 
 def run_doc_autogen(_):
     # Execute the autogeneration of Sphinx format docs from the YAML sources
-    import sys
     import os
+    import sys
     conf_file_dir = os.path.dirname(os.path.abspath(__file__))
     sys.path.append(conf_file_dir)  # Need so that generate format docs can find the conf_doc_autogen file
     from conf_doc_autogen import spec_output_dir

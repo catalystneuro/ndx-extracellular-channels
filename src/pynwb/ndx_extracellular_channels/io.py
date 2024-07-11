@@ -1,8 +1,10 @@
 from __future__ import annotations  # postpone type hint evaluation
+
+import warnings
+from typing import TYPE_CHECKING, List, Union
+
 import ndx_extracellular_channels
 import numpy as np
-from typing import Union, List, TYPE_CHECKING
-import warnings
 
 if TYPE_CHECKING:
     import probeinterface
@@ -83,7 +85,8 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
         probeinterface.Probe.device_channel_indices
     ndx_extracellular_channels.Probe.probe_model.contacts_table["shank_id"] -> probeinterface.Probe.shank_ids
     ndx_extracellular_channels.Probe.probe_model.contacts_table["plane_axes"] -> probeinterface.Probe.contact_plane_axes
-    ndx_extracellular_channels.Probe.probe_model.contacts_table["radius_in_um"] -> probeinterface.Probe.contact_shapes["radius"]
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["radius_in_um"] ->
+        probeinterface.Probe.contact_shapes["radius"]
 
 
     Parameters

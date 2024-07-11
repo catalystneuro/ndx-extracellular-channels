@@ -1,10 +1,12 @@
 import datetime
+import uuid
+
 import ndx_extracellular_channels
 import numpy as np
 import numpy.testing as npt
 import probeinterface
+
 import pynwb
-import uuid
 
 
 def test_from_probeinterface():
@@ -158,7 +160,7 @@ def test_from_probeinterface():
         npt.assert_array_equal(nwbfile.devices["renamed_probe3"].probe_model.contacts_table["shape"].data[:], "circle")
         npt.assert_array_equal(
             nwbfile.devices["renamed_probe3"].probe_model.contacts_table["radius_in_um"].data[:],
-            probe3.to_numpy()["radius"]
+            probe3.to_numpy()["radius"],
         )
 
 

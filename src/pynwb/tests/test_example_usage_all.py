@@ -1,17 +1,18 @@
 import datetime
-from hdmf.common import DynamicTableRegion
-import numpy as np
-from pynwb import NWBFile, NWBHDF5IO
 import uuid
 
+import numpy as np
+from hdmf.common import DynamicTableRegion
 from ndx_extracellular_channels import (
-    ProbeInsertion,
-    ContactsTable,
-    ProbeModel,
-    Probe,
     ChannelsTable,
+    ContactsTable,
     ExtracellularSeries,
+    Probe,
+    ProbeInsertion,
+    ProbeModel,
 )
+
+from pynwb import NWBHDF5IO, NWBFile
 
 
 def test_all_classes():

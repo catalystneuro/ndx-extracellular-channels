@@ -1,18 +1,18 @@
 """Unit and integration tests for the ndx_extracellular_channels types."""
 
-from hdmf.common import DynamicTableRegion
 import numpy as np
-from pynwb import NWBFile
-from pynwb.testing import TestCase, NWBH5IOFlexMixin
-
+from hdmf.common import DynamicTableRegion
 from ndx_extracellular_channels import (
-    ProbeInsertion,
-    ContactsTable,
-    ProbeModel,
-    Probe,
     ChannelsTable,
+    ContactsTable,
     ExtracellularSeries,
+    Probe,
+    ProbeInsertion,
+    ProbeModel,
 )
+from pynwb.testing import NWBH5IOFlexMixin, TestCase
+
+from pynwb import NWBFile
 
 
 class TestContactsTable(TestCase):
