@@ -153,8 +153,6 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
                 new_key = possible_shape_key.replace("_in_um", "")
                 shape_params[i][new_key] = contacts_table[possible_shape_key][i]
 
-    print(shape_params)
-
     probeinterface_probe = probeinterface.Probe(
         ndim=ndx_probe.probe_model.ndim,
         si_units="um",
