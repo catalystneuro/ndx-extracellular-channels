@@ -638,7 +638,6 @@ class TestExtracellularSeries(TestCase):
             channel_conversion=[1.1],
             conversion=1e5,
             offset=0.001,
-            unit="volts",  # TODO should not have to specify this in init
         )
 
         assert es.name == "ExtracellularSeries"
@@ -649,7 +648,7 @@ class TestExtracellularSeries(TestCase):
         assert es.conversion == 1e5
         assert es.offset == 0.001
         # NOTE: the TimeSeries mapper maps spec "ExtracellularSeries/data/unit" to "ExtracellularSeries.unit"
-        assert es.unit == "volts"
+        assert es.unit == "microvolts"
         assert es.timestamps_unit == "seconds"
 
 
@@ -694,7 +693,6 @@ class TestExtracellularSeriesRoundTrip(NWBH5IOFlexMixin, TestCase):
             channel_conversion=[1.0, 1.1, 1.2],
             conversion=1e5,
             offset=0.001,
-            unit="volts",  # TODO should not have to specify this in init
         )
         self.nwbfile.add_acquisition(es)
 

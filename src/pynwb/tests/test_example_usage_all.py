@@ -145,7 +145,6 @@ def test_all_classes():
         channel_conversion=[1.0, 1.1, 1.2],
         conversion=1e5,
         offset=0.001,
-        unit="volts",  # TODO should not have to specify this in init
     )
 
     nwbfile.add_acquisition(es)
@@ -171,7 +170,7 @@ def test_all_classes():
         np.testing.assert_array_equal(read_eseries.channel_conversion[:], [1.0, 1.1, 1.2])
         assert read_eseries.conversion == 1e5
         assert read_eseries.offset == 0.001
-        assert read_eseries.unit == "volts"
+        assert read_eseries.unit == "microvolts"
 
         assert read_channels_table.name == "Neuropixels1ChannelsTable"
         assert read_channels_table.description == "Test channels table"
