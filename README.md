@@ -187,7 +187,7 @@ classDiagram
     ProbeModel *--> ContactsTable : contains
     ExtracellularSeries ..> ChannelsTable : links to channels
     ChannelsTable *..> Probe : links to probe
-    ChannelsTable ..> ContactTable : links to contacts
+    ChannelsTable ..> ContactsTable : row reference to contact
     ChannelsTable *--> ProbeInsertion: might contain ProbeInsertion
     note for ChannelsTable "ChannelsTable is no longer global"
 ```
