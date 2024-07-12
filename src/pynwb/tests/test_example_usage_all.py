@@ -2,6 +2,7 @@ import datetime
 import uuid
 
 import numpy as np
+import numpy.testing as npt
 from hdmf.common import DynamicTableRegion
 from ndx_extracellular_channels import (
     ChannelsTable,
@@ -33,7 +34,7 @@ def test_all_classes():
         contact_id="C1",
         device_channel=1,
         shank_id="shank0",
-        plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+        plane_axes=[[1.0, 0.0], [0.0, 1.0]],
         shape="circle",
         radius_in_um=10.0,
         width_in_um=np.nan,
@@ -44,7 +45,7 @@ def test_all_classes():
         contact_id="C2",
         device_channel=2,
         shank_id="shank0",
-        plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+        plane_axes=[[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
         shape="square",
         radius_in_um=np.nan,
         width_in_um=10.0,
@@ -162,12 +163,12 @@ def test_all_classes():
         read_channels_table = read_nwbfile.acquisition["Neuropixels1ChannelsTable"]
         read_contacts_table = read_nwbfile.acquisition["contacts_table"]
 
-        np.testing.assert_array_equal(read_eseries.data[:], [0.0, 1.0, 2.0])
-        np.testing.assert_array_equal(read_eseries.timestamps[:], [0.0, 0.001, 0.0002])
-        np.testing.assert_array_equal(read_eseries.channels.data[:], [0, 1, 2])
+        npt.assert_array_equal(read_eseries.data[:], [0.0, 1.0, 2.0])
+        npt.assert_array_equal(read_eseries.timestamps[:], [0.0, 0.001, 0.0002])
+        npt.assert_array_equal(read_eseries.channels.data[:], [0, 1, 2])
         assert read_eseries.channels.description == "All of the channels"
         assert read_eseries.channels.table is read_channels_table
-        np.testing.assert_array_equal(read_eseries.channel_conversion[:], [1.0, 1.1, 1.2])
+        npt.assert_array_equal(read_eseries.channel_conversion[:], [1.0, 1.1, 1.2])
         assert read_eseries.conversion == 1e5
         assert read_eseries.offset == 0.001
         assert read_eseries.unit == "microvolts"
@@ -183,20 +184,18 @@ def test_all_classes():
         assert read_channels_table.probe is read_nwbfile.devices["Neuropixels Probe 1"]
         assert len(read_channels_table) == 2
         assert read_channels_table["contact"].table is read_contacts_table
-        np.testing.assert_array_equal(read_channels_table["contact"].data[:], [0, 1])
+        npt.assert_array_equal(read_channels_table["contact"].data[:], [0, 1])
         assert read_channels_table["reference_contact"].table is read_contacts_table
-        np.testing.assert_array_equal(read_channels_table["reference_contact"].data[:], [2, 2])
-        np.testing.assert_array_equal(
-            read_channels_table["filter"].data[:], ["High-pass at 300 Hz", "High-pass at 300 Hz"]
-        )
-        np.testing.assert_array_equal(read_channels_table["estimated_position_ap_in_mm"].data[:], [2.0, 2.0])
-        np.testing.assert_array_equal(read_channels_table["estimated_position_ml_in_mm"].data[:], [-5.0, -4.9])
-        np.testing.assert_array_equal(read_channels_table["estimated_position_dv_in_mm"].data[:], [-9.5, -9.3])
-        np.testing.assert_array_equal(read_channels_table["estimated_brain_area"].data[:], ["CA3", "CA3"])
-        np.testing.assert_array_equal(read_channels_table["confirmed_position_ap_in_mm"].data[:], [2.0, 2.0])
-        np.testing.assert_array_equal(read_channels_table["confirmed_position_ml_in_mm"].data[:], [-4.9, -4.8])
-        np.testing.assert_array_equal(read_channels_table["confirmed_position_dv_in_mm"].data[:], [-9.5, -9.3])
-        np.testing.assert_array_equal(read_channels_table["confirmed_brain_area"].data[:], ["CA3", "CA3"])
+        npt.assert_array_equal(read_channels_table["reference_contact"].data[:], [2, 2])
+        npt.assert_array_equal(read_channels_table["filter"].data[:], ["High-pass at 300 Hz", "High-pass at 300 Hz"])
+        npt.assert_array_equal(read_channels_table["estimated_position_ap_in_mm"].data[:], [2.0, 2.0])
+        npt.assert_array_equal(read_channels_table["estimated_position_ml_in_mm"].data[:], [-5.0, -4.9])
+        npt.assert_array_equal(read_channels_table["estimated_position_dv_in_mm"].data[:], [-9.5, -9.3])
+        npt.assert_array_equal(read_channels_table["estimated_brain_area"].data[:], ["CA3", "CA3"])
+        npt.assert_array_equal(read_channels_table["confirmed_position_ap_in_mm"].data[:], [2.0, 2.0])
+        npt.assert_array_equal(read_channels_table["confirmed_position_ml_in_mm"].data[:], [-4.9, -4.8])
+        npt.assert_array_equal(read_channels_table["confirmed_position_dv_in_mm"].data[:], [-9.5, -9.3])
+        npt.assert_array_equal(read_channels_table["confirmed_brain_area"].data[:], ["CA3", "CA3"])
 
         assert (
             read_channels_table.probe_insertion.position_reference
@@ -218,7 +217,7 @@ def test_all_classes():
         assert read_nwbfile.devices["Neuropixels 1.0"].description == "A neuropixels probe"
         assert read_nwbfile.devices["Neuropixels 1.0"].model == "Neuropixels 1.0"
         assert read_nwbfile.devices["Neuropixels 1.0"].manufacturer == "IMEC"
-        np.testing.assert_array_equal(
+        npt.assert_array_equal(
             read_nwbfile.devices["Neuropixels 1.0"].planar_contour_in_um,
             [[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
         )
@@ -226,16 +225,14 @@ def test_all_classes():
 
         assert read_contacts_table.name == "contacts_table"
         assert read_contacts_table.description == "Test contacts table"
-        np.testing.assert_array_equal(
-            read_contacts_table["relative_position_in_mm"].data[:], [[10.0, 10.0], [20.0, 10.0]]
-        )
-        np.testing.assert_array_equal(read_contacts_table["shape"].data[:], ["circle", "square"])
-        np.testing.assert_array_equal(read_contacts_table["contact_id"].data[:], ["C1", "C2"])
-        np.testing.assert_array_equal(read_contacts_table["shank_id"].data[:], ["shank0", "shank0"])
-        np.testing.assert_array_equal(
+        npt.assert_array_equal(read_contacts_table["relative_position_in_mm"].data[:], [[10.0, 10.0], [20.0, 10.0]])
+        npt.assert_array_equal(read_contacts_table["shape"].data[:], ["circle", "square"])
+        npt.assert_array_equal(read_contacts_table["contact_id"].data[:], ["C1", "C2"])
+        npt.assert_array_equal(read_contacts_table["shank_id"].data[:], ["shank0", "shank0"])
+        npt.assert_array_equal(
             read_contacts_table["plane_axes"].data[:], [[[0.0, 1.0], [1.0, 0.0]], [[0.0, 1.0], [1.0, 0.0]]]
         )
-        np.testing.assert_array_equal(read_contacts_table["radius_in_um"].data[:], [10.0, np.nan])
-        np.testing.assert_array_equal(read_contacts_table["width_in_um"].data[:], [np.nan, 10.0])
-        np.testing.assert_array_equal(read_contacts_table["height_in_um"].data[:], [np.nan, 10.0])
-        np.testing.assert_array_equal(read_contacts_table["device_channel"].data[:], [1, 2])
+        npt.assert_array_equal(read_contacts_table["radius_in_um"].data[:], [10.0, np.nan])
+        npt.assert_array_equal(read_contacts_table["width_in_um"].data[:], [np.nan, 10.0])
+        npt.assert_array_equal(read_contacts_table["height_in_um"].data[:], [np.nan, 10.0])
+        npt.assert_array_equal(read_contacts_table["device_channel"].data[:], [1, 2])

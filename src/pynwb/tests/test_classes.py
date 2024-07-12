@@ -38,7 +38,7 @@ class TestContactsTable(TestCase):
             shape="circle",
             contact_id="C1",
             shank_id="shank0",
-            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[1.0, 0.0], [0.0, 1.0]],
             radius_in_um=10.0,
             width_in_um=np.nan,
             height_in_um=np.nan,
@@ -50,7 +50,7 @@ class TestContactsTable(TestCase):
             shape="square",
             contact_id="C2",
             shank_id="shank0",
-            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
             radius_in_um=np.nan,
             width_in_um=10.0,
             height_in_um=10.0,
@@ -69,7 +69,10 @@ class TestContactsTable(TestCase):
         assert ct["shape"].data == ["circle", "square"]
         assert ct["contact_id"].data == ["C1", "C2"]
         assert ct["shank_id"].data == ["shank0", "shank0"]
-        assert ct["plane_axes"].data == [[[0.0, 1.0], [1.0, 0.0]], [[0.0, 1.0], [1.0, 0.0]]]
+        assert ct["plane_axes"].data == [
+            [[1.0, 0.0], [0.0, 1.0]],
+            [[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
+        ]
         assert ct["radius_in_um"].data == [10.0, np.nan]
         assert ct["width_in_um"].data == [np.nan, 10.0]
         assert ct["device_channel"].data == [1, 2]
@@ -93,7 +96,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             shape="circle",
             contact_id="C1",
             shank_id="shank0",
-            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[1.0, 0.0], [0.0, 1.0]],
             radius_in_um=10.0,
             width_in_um=np.nan,
             height_in_um=np.nan,
@@ -105,7 +108,7 @@ class TestContactsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             shape="square",
             contact_id="C2",
             shank_id="shank0",
-            plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+            plane_axes=[[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
             radius_in_um=np.nan,
             width_in_um=10.0,
             height_in_um=10.0,

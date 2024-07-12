@@ -94,7 +94,13 @@ def main():
                 name="plane_axes",
                 neurodata_type_inc="VectorData",
                 doc=(
-                    "The axes defining the contact plane. "
+                    "The axes defining the contact plane for each contact. It can be used for contact-wise rotations. "
+                    "For 2D probes, provide two points (v1x, v1y) and (v2x, v2y). Axis 1 is defined by the vector "
+                    "from (0, 0) to (v1x, v1y). Axis 2 is defined by the vector from (0, 0) to (v2x, v2y). "
+                    "So for one contact, a 45 degree rotation would be "
+                    "[[1 / sqrt(2), 1 / sqrt(2)], [-1 / sqrt(2), 1 / sqrt(2)]]. "
+                    "The default is [[1, 0], [0, 1]]. For 3D probes, provide two points (v1x, v1y, v1z), "
+                    "(v2x, v2y, v2z). "
                     "See 'contact_plane_axes' in "
                     "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."
                 ),

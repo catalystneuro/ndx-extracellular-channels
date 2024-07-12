@@ -256,7 +256,7 @@ def test_to_probeinterface():
         shape="circle",
         contact_id="C1",
         shank_id="shank0",
-        plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+        plane_axes=[[1.0, 0.0], [0.0, 1.0]],
         radius_in_um=10.0,
         width_in_um=np.nan,
         height_in_um=np.nan,
@@ -267,7 +267,7 @@ def test_to_probeinterface():
         shape="square",
         contact_id="C2",
         shank_id="shank0",
-        plane_axes=[[0.0, 1.0], [1.0, 0.0]],  # TODO make realistic
+        plane_axes=[[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
         radius_in_um=np.nan,
         width_in_um=10.0,
         height_in_um=10.0,
@@ -298,6 +298,10 @@ def test_to_probeinterface():
     assert pi_probe1.manufacturer == "IMEC"
     npt.assert_array_equal(pi_probe1.contact_positions, probe_model1.contacts_table.relative_position_in_mm)
     npt.assert_array_equal(pi_probe1.contact_shapes, ["circle", "square"])
+    npt.assert_array_equal(
+        pi_probe1.contact_plane_axes,
+        [[[1.0, 0.0], [0.0, 1.0]], [[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]]],
+    )
     npt.assert_array_equal(pi_probe1.to_numpy()["radius"], [10.0, np.nan])
     npt.assert_array_equal(pi_probe1.to_numpy()["width"], [np.nan, 10.0])
     npt.assert_array_equal(pi_probe1.to_numpy()["height"], [np.nan, 10.0])
