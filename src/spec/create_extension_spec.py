@@ -56,7 +56,7 @@ def main():
                             "(first element), which direction is positive in the y direction (second element), etc."
                         ),
                         dtype="text",
-                        required=False,  # TODO should this be required?
+                        required=False,
                     )
                 ],
             ),
@@ -108,6 +108,7 @@ def main():
                 neurodata_type_inc="VectorData",
                 doc="Shape of the contact; e.g. 'circle'",
                 dtype="text",
+                quantity="?",
             ),
             NWBDatasetSpec(
                 name="radius_in_um",
@@ -315,7 +316,6 @@ def main():
                 name="contact",
                 neurodata_type_inc="DynamicTableRegion",
                 doc="The row in a ContactsTable that represents the contact used as a channel.",
-                quantity="?",  # TODO should this be optional?
             ),
             NWBDatasetSpec(
                 name="reference_contact",

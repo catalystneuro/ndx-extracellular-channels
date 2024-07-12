@@ -28,5 +28,16 @@ ExtracellularSeries = get_class("ExtracellularSeries", "ndx-extracellular-channe
 
 from .io import from_probeinterface, to_probeinterface
 
+__all__ = (
+    "ProbeInsertion",
+    "ContactsTable",
+    "ProbeModel",
+    "Probe",
+    "ChannelsTable",
+    "ExtracellularSeries",
+    "from_probeinterface",
+    "to_probeinterface",
+)
+
 # Remove these functions from the package
 del load_namespaces, get_class

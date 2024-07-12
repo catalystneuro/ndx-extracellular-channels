@@ -106,7 +106,7 @@ classDiagram
         columns
         --------------------------------------
         id : VectorData[int]
-        contact : DynamicTableRegion, optional
+        contact : DynamicTableRegion
         --> target : ContactsTable
         reference_contact :  DynamicTableRegion, optional
         --> target : ContactsTable

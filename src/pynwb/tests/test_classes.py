@@ -457,12 +457,16 @@ class TestChannelsTable(TestCase):
         ct = ChannelsTable(
             description="Test channels table",
             probe=probe,
+            target_tables={
+                "contact": probe.probe_model.contacts_table,
+            },
         )
-        ct.add_row()
-        ct.add_row()
+        ct.add_row(contact=0)
+        ct.add_row(contact=1)
 
         assert len(ct) == 2
         assert ct.id.data == [0, 1]
+        assert ct["contact"].data == [0, 1]
 
     def test_constructor_add_row(self):
         """Test that the constructor for ChannelsTable sets values as expected."""
@@ -611,10 +615,13 @@ class TestExtracellularSeries(TestCase):
             name="Neuropixels1ChannelsTable",
             description="Test channels table",
             probe=probe,
+            target_tables={
+                "contact": probe.probe_model.contacts_table,
+            },
         )
-        ct.add_row()
-        ct.add_row()
-        ct.add_row()
+        ct.add_row(contact=0)
+        ct.add_row(contact=1)
+        ct.add_row(contact=2)
 
         channels = DynamicTableRegion(
             name="channels",  # NOTE: this must be named "channels" when used in ExtracellularSeries
@@ -661,10 +668,13 @@ class TestExtracellularSeriesRoundTrip(NWBH5IOFlexMixin, TestCase):
             name="Neuropixels1ChannelsTable",
             description="Test channels table",
             probe=probe,
+            target_tables={
+                "contact": probe.probe_model.contacts_table,
+            },
         )
-        ct.add_row()
-        ct.add_row()
-        ct.add_row()
+        ct.add_row(contact=0)
+        ct.add_row(contact=1)
+        ct.add_row(contact=2)
 
         # put this in nwbfile.acquisition for testing
         self.nwbfile.add_acquisition(ct)

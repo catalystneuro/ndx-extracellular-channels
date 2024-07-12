@@ -71,6 +71,7 @@ groups:
     neurodata_type_inc: VectorData
     dtype: text
     doc: Shape of the contact; e.g. 'circle'
+    quantity: '?'
   - name: radius_in_um
     neurodata_type_inc: VectorData
     dtype: float
@@ -221,7 +222,6 @@ groups:
   - name: contact
     neurodata_type_inc: DynamicTableRegion
     doc: The row in a ContactsTable that represents the contact used as a channel.
-    quantity: '?'
   - name: reference_contact
     neurodata_type_inc: DynamicTableRegion
     doc: The row in a ContactsTable that represents the contact used as a reference.
