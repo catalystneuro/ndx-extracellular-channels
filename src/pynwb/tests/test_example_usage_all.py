@@ -230,7 +230,11 @@ def test_all_classes():
         npt.assert_array_equal(read_contacts_table["contact_id"].data[:], ["C1", "C2"])
         npt.assert_array_equal(read_contacts_table["shank_id"].data[:], ["shank0", "shank0"])
         npt.assert_array_equal(
-            read_contacts_table["plane_axes"].data[:], [[[0.0, 1.0], [1.0, 0.0]], [[0.0, 1.0], [1.0, 0.0]]]
+            read_contacts_table["plane_axes"].data[:],
+            [
+                [[1.0, 0.0], [0.0, 1.0]],
+                [[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
+            ],
         )
         npt.assert_array_equal(read_contacts_table["radius_in_um"].data[:], [10.0, np.nan])
         npt.assert_array_equal(read_contacts_table["width_in_um"].data[:], [np.nan, 10.0])
