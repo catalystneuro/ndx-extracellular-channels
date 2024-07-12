@@ -89,14 +89,14 @@ classDiagram
         --> axis : int = 1
     }
 
-    class ChannelsTable{
+    class ChannelsTable {
         <<DynamicTable>>
         --------------------------------------
         attributes
         --------------------------------------
         name : str
         description : str
-        probe : ProbeModel
+        probe : Probe
         probe_insertion : ProbeInsertion, optional
         position_reference : str, optional
         reference_mode : str, optional
