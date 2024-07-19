@@ -99,7 +99,7 @@ classDiagram
         probe : Probe
         probe_insertion : ProbeInsertion, optional
         position_reference : str, optional
-        reference_mode : str, optional
+        electrical_reference_mode : str, optional
         position_confirmation_method : str, optional
 
         --------------------------------------

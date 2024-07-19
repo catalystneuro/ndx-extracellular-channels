@@ -87,7 +87,7 @@ def test_all_classes():
     channels_table = ChannelsTable(
         name="Neuropixels1ChannelsTable",  # test custom name
         description="Test channels table",
-        reference_mode="Referenced to channel 2.",
+        electrical_reference_mode="Referenced to channel 2.",
         position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
         position_confirmation_method="Histology",
         probe=probe,
@@ -171,7 +171,7 @@ def test_all_classes():
 
         assert read_channels_table.name == "Neuropixels1ChannelsTable"
         assert read_channels_table.description == "Test channels table"
-        assert read_channels_table.reference_mode == "Referenced to channel 2."
+        assert read_channels_table.electrical_reference_mode == "Referenced to channel 2."
         assert (
             read_channels_table.position_reference
             == "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface."

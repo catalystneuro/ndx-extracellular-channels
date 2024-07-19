@@ -187,12 +187,12 @@ def main():
                 dtype="text",
             ),
             NWBAttributeSpec(
-                name="planar_contour_in_um",  # TODO should this just be "contour"?
+                name="planar_contour_in_um",  # TODO should this just be "contour_in_um"?
                 doc=(
                     "The coordinates of the nodes of the polygon that describe the shape (contour) of the probe, "
                     "in micrometers. The first and last points are connected to close the polygon. "
-                    "e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]."
-                    "See 'probe_planar_contour' in "
+                    "e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20., 190.)]. Coordinates can be "
+                    "in 2D or 3D. See 'probe_planar_contour' in "
                     "https://probeinterface.readthedocs.io/en/main/format_spec.html for more details."
                 ),
                 dtype="float",
@@ -432,7 +432,7 @@ def main():
                 required=False,
             ),
             NWBAttributeSpec(
-                name="reference_mode",
+                name="electrical_reference_mode",
                 doc=(
                     'The reference mode used for the recording; e.g., "external wire in CSF", '
                     'common reference", "skull screw over frontal cortex".'

@@ -467,7 +467,7 @@ class TestChannelsTable(TestCase):
 
         assert ct.name == "ChannelsTable"
         assert ct.description == "Test channels table"
-        assert ct.reference_mode is None
+        assert ct.electrical_reference_mode is None
         assert ct.probe is probe
         assert len(ct) == 0
 
@@ -511,7 +511,7 @@ class TestChannelsTable(TestCase):
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
             description="Test channels table",
-            reference_mode="Referenced to channel 2.",
+            electrical_reference_mode="Referenced to channel 2.",
             position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
             position_confirmation_method="Histology",
             probe=probe,
@@ -548,7 +548,7 @@ class TestChannelsTable(TestCase):
 
         assert ct.name == "Neuropixels1ChannelsTable"
         assert ct.description == "Test channels table"
-        assert ct.reference_mode == "Referenced to channel 2."
+        assert ct.electrical_reference_mode == "Referenced to channel 2."
         assert ct.position_reference == "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface."
         assert ct.position_confirmation_method == "Histology"
         assert ct.probe is probe
@@ -587,7 +587,7 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
             description="Test channels table",
-            reference_mode="Referenced to channel 2.",
+            electrical_reference_mode="Referenced to channel 2.",
             position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
             position_confirmation_method="Histology",
             probe=probe,
