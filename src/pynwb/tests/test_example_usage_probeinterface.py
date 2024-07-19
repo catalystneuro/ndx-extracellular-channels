@@ -259,7 +259,6 @@ def test_to_probeinterface():
         radius_in_um=10.0,
         width_in_um=np.nan,
         height_in_um=np.nan,
-        device_channel=1,
     )
     ct2.add_row(
         relative_position_in_mm=[20.0, 10.0],
@@ -270,7 +269,6 @@ def test_to_probeinterface():
         radius_in_um=np.nan,
         width_in_um=10.0,
         height_in_um=10.0,
-        device_channel=2,
     )
     probe_model1 = ndx_extracellular_channels.ProbeModel(
         model="Neuropixels 1.0",

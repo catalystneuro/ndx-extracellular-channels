@@ -32,16 +32,6 @@ groups:
     dtype: text
     doc: Unique ID of the contact
     quantity: '?'
-  - name: device_channel
-    neurodata_type_inc: VectorData
-    dtype: int
-    doc: 'Index of the channel connected to the contact on the device. Probes can
-      have a complex contact indexing system due to the probe layout. When they are
-      plugged into a recording device like an Open Ephys with an Intan headstage,
-      the channel order can be mixed again. So the physical contact channel index
-      is rarely the channel index on the device. See the probeinterface tutorial on
-      automatic wiring for an example: https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py'
-    quantity: '?'
   - name: shank_id
     neurodata_type_inc: VectorData
     dtype: text

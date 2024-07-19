@@ -174,7 +174,6 @@ classDiagram
                 relative_position_in_mm : List[Tuple[float, float], Tuple[float, float, float]]
                 --> reference : str, optional
                 contact_id : VectorData[str], optional
-                device_channel : VectorData[int], optional
                 shank_id : VectorData[str], optional
                 plane_axes : List[Tuple[int, int], Tuple[int, int, int]], optional
                 shape : VectorData[str], optional

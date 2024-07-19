@@ -32,7 +32,6 @@ def test_all_classes():
     contacts_table.add_row(
         relative_position_in_mm=[10.0, 10.0],
         contact_id="C1",
-        device_channel=1,
         shank_id="shank0",
         plane_axes=[[1.0, 0.0], [0.0, 1.0]],
         shape="circle",
@@ -43,7 +42,6 @@ def test_all_classes():
     contacts_table.add_row(
         relative_position_in_mm=[20.0, 10.0],
         contact_id="C2",
-        device_channel=2,
         shank_id="shank0",
         plane_axes=[[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
         shape="square",
@@ -236,4 +234,3 @@ def test_all_classes():
         npt.assert_array_equal(read_contacts_table["radius_in_um"].data[:], [10.0, np.nan])
         npt.assert_array_equal(read_contacts_table["width_in_um"].data[:], [np.nan, 10.0])
         npt.assert_array_equal(read_contacts_table["height_in_um"].data[:], [np.nan, 10.0])
-        npt.assert_array_equal(read_contacts_table["device_channel"].data[:], [1, 2])

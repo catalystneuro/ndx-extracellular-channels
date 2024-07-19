@@ -23,20 +23,23 @@ def from_probeinterface(
     name: Union[str, list] = None,
 ) -> List[ndx_extracellular_channels.Probe]:
     """
-    Construct ndx-extracellular-channels Probe objects from a probeinterface.Probe or probeinterface.ProbeGroup.
+    Construct ndx_extracellular_channels.Probe objects from a probeinterface.Probe or probeinterface.ProbeGroup.
 
     Parameters
     ----------
     probe_or_probegroup: Probe or ProbeGroup
-        Probe or ProbeGroup to convert to ndx-extracellular-channels ProbeModel devices.
+        Probe or ProbeGroup to convert to ndx_extracellular_channels.ProbeModel devices.
     name: str or list, optional
         Name of the Probe. If a ProbeGroup is passed, this can be a list of names.
         If None, an error will be raised if the Probe(s) does not have a name.
 
+    NOTE: The probeinterface.Probe.device_channel_indices are a property of the data acquisition and not set
+    in the ndx_extracellular_channels.Probe object. You can specify this in ChannelsTable.contacts.
+
     Returns
     -------
-    probe_models: list
-        The list of ndx-extracellular-channels Probe objects.
+    ndx_probes: list
+        The list of ndx_extracellular_channels.Probe objects.
     """
     try:
         import probeinterface
@@ -88,6 +91,9 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
     ndx_extracellular_channels.Probe.probe_model.contacts_table["radius_in_um"] ->
         probeinterface.Probe.contact_shapes["radius"]
 
+    NOTE: The probeinterface.Probe.device_channel_indices are a property of the data acquisition. To set them
+    from NWB data, use the mapping from channels in the ChannelsTable to contacts in the
+    ndx_extracellular_channels.Probe.probe_model.contacts_table (ChannelsTable.contacts).
 
     Parameters
     ----------
@@ -111,7 +117,6 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
     contact_ids = None
     shank_ids = None
     plane_axes = None
-    device_channel_indices = None
 
     possible_shape_keys = ["radius_in_um", "width_in_um", "height_in_um"]
     contacts_table = ndx_probe.probe_model.contacts_table
@@ -122,10 +127,6 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
         if contact_ids is None:
             contact_ids = []
         contact_ids.append(contacts_table["contact_id"][:])
-    if "device_channel" in contacts_table.colnames:
-        if device_channel_indices is None:
-            device_channel_indices = []
-        device_channel_indices.append(contacts_table["device_channel"][:])
     if "plane_axes" in contacts_table.colnames:
         if plane_axes is None:
             plane_axes = []
@@ -144,8 +145,6 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
         plane_axes = [item for sublist in plane_axes for item in sublist]
     if shank_ids is not None:
         shank_ids = [item for sublist in shank_ids for item in sublist]
-    if device_channel_indices is not None:
-        device_channel_indices = [item for sublist in device_channel_indices for item in sublist]
 
     # if there are multiple shape keys, e.g., radius, width, and height
     # we need to create a list of dicts, one for each contact
@@ -169,8 +168,6 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
     )
     if contact_ids is not None:
         probeinterface_probe.set_contact_ids(contact_ids=contact_ids)
-    if device_channel_indices is not None:
-        probeinterface_probe.set_device_channel_indices(channel_indices=device_channel_indices)
     probeinterface_probe.set_planar_contour(ndx_probe.probe_model.planar_contour_in_um)
 
     return probeinterface_probe
@@ -209,8 +206,6 @@ def _single_probe_to_ndx_probe(
             kwargs[f"{k}_in_um"] = contacts_arr[k][index] * conversion_factor
         if probe.contact_ids is not None:
             kwargs["contact_id"] = probe.contact_ids[index]
-        if probe.device_channel_indices is not None:
-            kwargs["device_channel"] = probe.device_channel_indices[index]
         if probe.shank_ids is not None:
             kwargs["shank_id"] = probe.shank_ids[index]
         contacts_table.add_row(kwargs)

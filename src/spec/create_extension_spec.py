@@ -68,22 +68,6 @@ def main():
                 quantity="?",
             ),
             NWBDatasetSpec(
-                # NOTE: cannot end this name with "_index" because it conflicts with ragged arrays
-                name="device_channel",
-                neurodata_type_inc="VectorData",
-                doc=(
-                    "Index of the channel connected to the contact on the device. "
-                    "Probes can have a complex contact indexing system due to the probe layout. "
-                    "When they are plugged into a recording device like an Open Ephys with an Intan headstage, "
-                    "the channel order can be mixed again. So the physical contact channel index "
-                    "is rarely the channel index on the device. See the probeinterface tutorial on automatic "
-                    "wiring for an example: "
-                    "https://probeinterface.readthedocs.io/en/main/examples/ex_11_automatic_wiring.html#sphx-glr-examples-ex-11-automatic-wiring-py"
-                ),
-                dtype="int",
-                quantity="?",
-            ),
-            NWBDatasetSpec(
                 name="shank_id",
                 neurodata_type_inc="VectorData",
                 doc="Shank ID of the contact",
