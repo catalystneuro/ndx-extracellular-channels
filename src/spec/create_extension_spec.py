@@ -417,9 +417,7 @@ def main():
             ),
             NWBAttributeSpec(
                 name="electrical_reference_description",
-                doc=(
-                    'The electrical reference used for the recording; e.g., "common average reference", "probe tip".'
-                ),
+                doc=('The electrical reference used for the recording; e.g., "common average reference", "probe tip".'),
                 dtype="text",
                 required=False,
             ),
