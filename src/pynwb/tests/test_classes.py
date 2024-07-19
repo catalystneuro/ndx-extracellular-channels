@@ -467,7 +467,8 @@ class TestChannelsTable(TestCase):
 
         assert ct.name == "ChannelsTable"
         assert ct.description == "Test channels table"
-        assert ct.electrical_reference_mode is None
+        assert ct.electrical_reference_description is None
+        assert ct.ground is None
         assert ct.probe is probe
         assert len(ct) == 0
 
@@ -511,7 +512,8 @@ class TestChannelsTable(TestCase):
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
             description="Test channels table",
-            electrical_reference_mode="Referenced to channel 2.",
+            electrical_reference_description="Probe tip.",  # usually if reference_contact is provided, this is not
+            ground="Skull screw over cerebellum.",
             position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
             position_confirmation_method="Histology",
             probe=probe,
@@ -520,7 +522,7 @@ class TestChannelsTable(TestCase):
 
         ct.add_row(
             contact=0,
-            reference_contact=2,
+            reference_contact=1,
             filter="High-pass at 300 Hz",
             estimated_position_ap_in_mm=2.0,
             estimated_position_ml_in_mm=-5.0,
@@ -548,7 +550,8 @@ class TestChannelsTable(TestCase):
 
         assert ct.name == "Neuropixels1ChannelsTable"
         assert ct.description == "Test channels table"
-        assert ct.electrical_reference_mode == "Referenced to channel 2."
+        assert ct.electrical_reference_description == "Probe tip."
+        assert ct.ground == "Skull screw over cerebellum."
         assert ct.position_reference == "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface."
         assert ct.position_confirmation_method == "Histology"
         assert ct.probe is probe
@@ -556,7 +559,7 @@ class TestChannelsTable(TestCase):
         assert len(ct) == 2
         assert ct["contact"].data == [0, 1]
         assert ct["contact"].table is probe.probe_model.contacts_table
-        assert ct["reference_contact"].data == [2, 2]
+        assert ct["reference_contact"].data == [1, 2]
         assert ct["reference_contact"].table is probe.probe_model.contacts_table
         assert ct["filter"].data == ["High-pass at 300 Hz", "High-pass at 300 Hz"]
         assert ct["estimated_position_ap_in_mm"].data == [2.0, 2.0]
@@ -587,7 +590,8 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
             description="Test channels table",
-            electrical_reference_mode="Referenced to channel 2.",
+            electrical_reference_description="Probe tip.",  # usually if reference_contact is provided, this is not
+            ground="Skull screw over cerebellum.",
             position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
             position_confirmation_method="Histology",
             probe=probe,
@@ -596,7 +600,7 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
 
         ct.add_row(
             contact=0,
-            reference_contact=2,
+            reference_contact=1,
             filter="High-pass at 300 Hz",
             estimated_position_ap_in_mm=2.0,
             estimated_position_ml_in_mm=-5.0,

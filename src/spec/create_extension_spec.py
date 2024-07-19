@@ -432,10 +432,18 @@ def main():
                 required=False,
             ),
             NWBAttributeSpec(
-                name="electrical_reference_mode",
+                name="electrical_reference_description",
                 doc=(
-                    'The reference mode used for the recording; e.g., "external wire in CSF", '
-                    'common reference", "skull screw over frontal cortex".'
+                    'The electrical reference used for the recording; e.g., "common average reference", "probe tip".'
+                ),
+                dtype="text",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="ground",
+                doc=(
+                    'The ground used for the recording; e.g., "external wire in CSF", "skull screw over '
+                    'frontal cortex".'
                 ),
                 dtype="text",
                 required=False,

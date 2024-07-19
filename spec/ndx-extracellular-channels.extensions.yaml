@@ -214,10 +214,15 @@ groups:
     doc: Location of the origin (0, 0, 0) for `{X}_position_{Y}_in_mm` coordinates,
       e.g., "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface".
     required: false
-  - name: electrical_reference_mode
+  - name: electrical_reference_description
     dtype: text
-    doc: The reference mode used for the recording; e.g., "external wire in CSF",
-      common reference", "skull screw over frontal cortex".
+    doc: The electrical reference used for the recording; e.g., "common average reference",
+      "probe tip".
+    required: false
+  - name: ground
+    dtype: text
+    doc: The ground used for the recording; e.g., "external wire in CSF", "skull screw
+      over frontal cortex".
     required: false
   - name: position_confirmation_method
     dtype: text
