@@ -57,9 +57,8 @@ def test_all_classes():
     nwbfile.add_acquisition(contacts_table)
 
     pm = ProbeModel(
-        name="Neuropixels 1.0",
-        description="A neuropixels probe",
         model="Neuropixels 1.0",
+        description="A neuropixels probe",
         manufacturer="IMEC",
         planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
         contacts_table=contacts_table,
@@ -93,11 +92,6 @@ def test_all_classes():
         position_confirmation_method="Histology",
         probe=probe,
         probe_insertion=pi,
-        target_tables={
-            "contact": probe.probe_model.contacts_table,
-            "reference_contact": probe.probe_model.contacts_table,
-        },
-        # TODO should not need to specify the above
     )
 
     # all of the keyword arguments in add_row are optional
@@ -140,8 +134,8 @@ def test_all_classes():
 
     es = ExtracellularSeries(
         name="ExtracellularSeries",
-        data=[0.0, 1.0, 2.0],
-        timestamps=[0.0, 0.001, 0.0002],
+        data=[[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [3.0, 4.0, 5.0]],
+        timestamps=[0.0, 0.001, 0.002, 0.003],
         channels=channels,
         channel_conversion=[1.0, 1.1, 1.2],
         conversion=1e5,
@@ -163,8 +157,10 @@ def test_all_classes():
         read_channels_table = read_nwbfile.acquisition["Neuropixels1ChannelsTable"]
         read_contacts_table = read_nwbfile.acquisition["contacts_table"]
 
-        npt.assert_array_equal(read_eseries.data[:], [0.0, 1.0, 2.0])
-        npt.assert_array_equal(read_eseries.timestamps[:], [0.0, 0.001, 0.0002])
+        npt.assert_array_equal(
+            read_eseries.data[:], [[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [3.0, 4.0, 5.0]]
+        )
+        npt.assert_array_equal(read_eseries.timestamps[:], [0.0, 0.001, 0.002, 0.003])
         npt.assert_array_equal(read_eseries.channels.data[:], [0, 1, 2])
         assert read_eseries.channels.description == "All of the channels"
         assert read_eseries.channels.table is read_channels_table

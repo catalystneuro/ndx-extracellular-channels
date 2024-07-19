@@ -175,7 +175,6 @@ def test_to_probeinterface():
 
     # create a probe model
     probe_model0 = ndx_extracellular_channels.ProbeModel(
-        name="a1x32-edge-5mm-20-177_H32",
         model="a1x32-edge-5mm-20-177_H32",
         manufacturer="Neuronexus",
         ndim=2,
@@ -274,9 +273,8 @@ def test_to_probeinterface():
         device_channel=2,
     )
     probe_model1 = ndx_extracellular_channels.ProbeModel(
-        name="Neuropixels 1.0",
-        description="A neuropixels probe",
         model="Neuropixels 1.0",
+        description="A neuropixels probe",
         manufacturer="IMEC",
         planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
         contacts_table=ct2,

@@ -138,20 +138,41 @@ class TestProbeModel(TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels 1.0",
-            description="A neuropixels probe",
+            name="Neuropixels 1.0 Probe Model",
             model="Neuropixels 1.0",
+            description="A neuropixels probe",
+            manufacturer="IMEC",
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+            contacts_table=ct,
+        )
+
+        assert pm.name == "Neuropixels 1.0 Probe Model"
+        assert pm.model == "Neuropixels 1.0"
+        assert pm.description == "A neuropixels probe"
+        assert pm.manufacturer == "IMEC"
+        assert pm.planar_contour_in_um == [[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]]
+        assert pm.contacts_table is ct
+        assert pm.ndim == 2
+
+    def test_constructor_no_name(self):
+        """Test that the constructor for ProbeModel sets values as expected."""
+        ct = ContactsTable(
+            description="Test contacts table",
+        )
+        ct.add_row(
+            relative_position_in_mm=[10.0, 10.0],
+            shape="circle",
+        )
+
+        pm = ProbeModel(
+            model="Neuropixels 1.0",
+            description="A neuropixels probe",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
         )
 
         assert pm.name == "Neuropixels 1.0"
-        assert pm.description == "A neuropixels probe"
-        assert pm.manufacturer == "IMEC"
-        assert pm.planar_contour_in_um == [[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]]
-        assert pm.contacts_table is ct
-        assert pm.ndim == 2
 
 
 class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
@@ -170,9 +191,9 @@ class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels 1.0",
-            description="A neuropixels probe",
+            name="Neuropixels 1.0 Probe Model",
             model="Neuropixels 1.0",
+            description="A neuropixels probe",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
@@ -182,7 +203,7 @@ class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
         self.nwbfile.add_device(pm)
 
     def getContainer(self, nwbfile: NWBFile):
-        return nwbfile.devices["Neuropixels 1.0"]
+        return nwbfile.devices["Neuropixels 1.0 Probe Model"]
 
 
 class TestProbe(TestCase):
@@ -199,7 +220,6 @@ class TestProbe(TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels 1.0",
             description="A neuropixels probe",
             model="Neuropixels 1.0",
             manufacturer="IMEC",
@@ -227,9 +247,8 @@ class TestProbe(TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels 1.0",
-            description="A neuropixels probe",
             model="Neuropixels 1.0",
+            description="A neuropixels probe",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
@@ -260,9 +279,8 @@ class TestProbeRoundTrip(NWBH5IOFlexMixin, TestCase):
         )
 
         pm = ProbeModel(
-            name="Neuropixels 1.0",
-            description="A neuropixels probe",
             model="Neuropixels 1.0",
+            description="A neuropixels probe",
             manufacturer="IMEC",
             planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
             contacts_table=ct,
@@ -303,8 +321,8 @@ def _create_test_probe():
 
     pm = ProbeModel(
         name="Neuropixels 1.0",
-        description="A neuropixels probe",
         model="Neuropixels 1.0",
+        description="A neuropixels probe",
         manufacturer="IMEC",
         planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
         contacts_table=ct,
@@ -460,9 +478,6 @@ class TestChannelsTable(TestCase):
         ct = ChannelsTable(
             description="Test channels table",
             probe=probe,
-            target_tables={
-                "contact": probe.probe_model.contacts_table,
-            },
         )
         ct.add_row(contact=0)
         ct.add_row(contact=1)
@@ -470,6 +485,22 @@ class TestChannelsTable(TestCase):
         assert len(ct) == 2
         assert ct.id.data == [0, 1]
         assert ct["contact"].data == [0, 1]
+        assert ct["contact"].table is probe.probe_model.contacts_table
+        assert "reference_contact" not in ct.columns
+
+    def test_constructor_add_row_with_reference(self):
+        """Test that the constructor for ChannelsTable sets values as expected."""
+        probe = _create_test_probe()
+
+        ct = ChannelsTable(
+            description="Test channels table",
+            probe=probe,
+        )
+        ct.add_row(contact=0, reference_contact=1)
+        ct.add_row(contact=1, reference_contact=0)
+
+        assert ct["reference_contact"].data == [1, 0]
+        assert ct["reference_contact"].table is probe.probe_model.contacts_table
 
     def test_constructor_add_row(self):
         """Test that the constructor for ChannelsTable sets values as expected."""
@@ -485,11 +516,6 @@ class TestChannelsTable(TestCase):
             position_confirmation_method="Histology",
             probe=probe,
             probe_insertion=pi,
-            target_tables={
-                "contact": probe.probe_model.contacts_table,
-                "reference_contact": probe.probe_model.contacts_table,
-            },
-            # TODO should not need to specify the above
         )
 
         ct.add_row(
@@ -566,11 +592,6 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             position_confirmation_method="Histology",
             probe=probe,
             probe_insertion=pi,
-            target_tables={
-                "contact": probe.probe_model.contacts_table,
-                "reference_contact": probe.probe_model.contacts_table,
-            },
-            # TODO should not need to specify the above
         )
 
         ct.add_row(
@@ -618,9 +639,6 @@ class TestExtracellularSeries(TestCase):
             name="Neuropixels1ChannelsTable",
             description="Test channels table",
             probe=probe,
-            target_tables={
-                "contact": probe.probe_model.contacts_table,
-            },
         )
         ct.add_row(contact=0)
         ct.add_row(contact=1)
@@ -635,24 +653,120 @@ class TestExtracellularSeries(TestCase):
 
         es = ExtracellularSeries(
             name="ExtracellularSeries",
-            data=[0.0, 1.0, 2.0],
-            timestamps=[0.0, 0.001, 0.002],
+            data=[[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [3.0, 4.0, 5.0]],
+            timestamps=[0.0, 0.001, 0.002, 0.003],
             channels=channels,
-            channel_conversion=[1.1],
+            channel_conversion=[1.0, 1.1, 1.2],
             conversion=1e5,
             offset=0.001,
         )
 
         assert es.name == "ExtracellularSeries"
-        assert es.data == [0.0, 1.0, 2.0]
-        assert es.timestamps == [0.0, 0.001, 0.002]
+        assert es.data == [[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [3.0, 4.0, 5.0]]
+        assert es.timestamps == [0.0, 0.001, 0.002, 0.003]
         assert es.channels is channels
-        assert es.channel_conversion == [1.1]
+        assert es.channel_conversion == [1.0, 1.1, 1.2]
         assert es.conversion == 1e5
         assert es.offset == 0.001
         # NOTE: the TimeSeries mapper maps spec "ExtracellularSeries/data/unit" to "ExtracellularSeries.unit"
         assert es.unit == "microvolts"
         assert es.timestamps_unit == "seconds"
+
+    def test_constructor_channels_dim_transpose(self):
+        probe = _create_test_probe()
+
+        ct = ChannelsTable(
+            name="Neuropixels1ChannelsTable",
+            description="Test channels table",
+            probe=probe,
+        )
+        ct.add_row(contact=0)
+        ct.add_row(contact=1)
+        ct.add_row(contact=2)
+
+        channels = DynamicTableRegion(
+            name="channels",  # NOTE: this must be named "channels" when used in ExtracellularSeries
+            data=[0, 1, 2],
+            description="All of the channels",
+            table=ct,
+        )
+
+        msg = (
+            "ExtracellularSeries 'ExtracellularSeries': The length of the second dimension of `data` "
+            "(4) does not match the length of `channels` (3), "
+            "but instead the length of the first dimension does. `data` is oriented incorrectly and "
+            "should be transposed."
+        )
+        with self.assertRaisesWith(ValueError, msg):
+            ExtracellularSeries(
+                name="ExtracellularSeries",
+                data=[[0.0, 1.0, 2.0, 3.0], [1.0, 2.0, 3.0, 4.0], [2.0, 3.0, 4.0, 5.0]],
+                timestamps=[0.0, 0.001, 0.002, 0.003],
+                channels=channels,
+            )
+
+    def test_constructor_channels_dim_mismatch(self):
+        probe = _create_test_probe()
+
+        ct = ChannelsTable(
+            name="Neuropixels1ChannelsTable",
+            description="Test channels table",
+            probe=probe,
+        )
+        ct.add_row(contact=0)
+        ct.add_row(contact=1)
+        ct.add_row(contact=2)
+
+        channels = DynamicTableRegion(
+            name="channels",  # NOTE: this must be named "channels" when used in ExtracellularSeries
+            data=[0, 1, 2],
+            description="All of the channels",
+            table=ct,
+        )
+
+        msg = (
+            "ExtracellularSeries 'ExtracellularSeries': The length of the second dimension of `data` "
+            "(2) does not match the length of `channels` (3)."
+        )
+        with self.assertRaisesWith(ValueError, msg):
+            ExtracellularSeries(
+                name="ExtracellularSeries",
+                data=[[0.0, 1.0], [1.0, 2.0], [2.0, 3.0], [3.0, 4.0]],
+                timestamps=[0.0, 0.001, 0.002, 0.003],
+                channels=channels,
+            )
+
+    def test_constructor_channel_conversion_dim_mismatch(self):
+        probe = _create_test_probe()
+
+        ct = ChannelsTable(
+            name="Neuropixels1ChannelsTable",
+            description="Test channels table",
+            probe=probe,
+        )
+        ct.add_row(contact=0)
+        ct.add_row(contact=1)
+        ct.add_row(contact=2)
+
+        channels = DynamicTableRegion(
+            name="channels",  # NOTE: this must be named "channels" when used in ExtracellularSeries
+            data=[0, 1, 2],
+            description="All of the channels",
+            table=ct,
+        )
+
+        msg = (
+            "ExtracellularSeries 'ExtracellularSeries': The length of the second dimension of `data` "
+            "(3) does not match the length of `channel_conversion` (1)."
+        )
+        with self.assertRaisesWith(ValueError, msg):
+            ExtracellularSeries(
+                name="ExtracellularSeries",
+                data=[[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [3.0, 4.0, 5.0]],
+                timestamps=[0.0, 0.001, 0.002, 0.003],
+                channels=channels,
+                channel_conversion=[0.1],
+            )
 
 
 class TestExtracellularSeriesRoundTrip(NWBH5IOFlexMixin, TestCase):
@@ -670,9 +784,6 @@ class TestExtracellularSeriesRoundTrip(NWBH5IOFlexMixin, TestCase):
             name="Neuropixels1ChannelsTable",
             description="Test channels table",
             probe=probe,
-            target_tables={
-                "contact": probe.probe_model.contacts_table,
-            },
         )
         ct.add_row(contact=0)
         ct.add_row(contact=1)
@@ -690,8 +801,8 @@ class TestExtracellularSeriesRoundTrip(NWBH5IOFlexMixin, TestCase):
 
         es = ExtracellularSeries(
             name="ExtracellularSeries",
-            data=[[0.0, 1.0, 2.0], [1.0, 2.0, 3.0]],
-            timestamps=[0.0, 0.001],
+            data=[[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0], [3.0, 4.0, 5.0]],
+            timestamps=[0.0, 0.001, 0.002, 0.003],
             channels=channels,
             channel_conversion=[1.0, 1.1, 1.2],
             conversion=1e5,
