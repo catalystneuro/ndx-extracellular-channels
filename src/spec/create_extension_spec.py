@@ -12,7 +12,7 @@ def main():
         author=[
             "Alessio Buccino",
             "Kyu Hyun Lee",
-            "Ramon Heberto Mayorquin",
+            "Heberto Mayorquin",
             "Cody Baker",
             "Matt Avaylon",
             "Ryan Ly",
