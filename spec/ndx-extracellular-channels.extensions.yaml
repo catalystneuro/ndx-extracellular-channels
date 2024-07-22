@@ -171,27 +171,26 @@ groups:
       stimulus site. Should be consistent with `insertion_position_in_mm.ml` coordinate
       (left = ml < 0, right = ml > 0).
     required: false
-  - name: insertion_angle_pitch_in_deg
-    dtype: float
-    doc: The pitch angle of the probe at the time of insertion, in degrees. Pitch
-      = rotation around left-right axis, like nodding (+ is rotating the nose upward).
-      Zero is defined as the probe being parallel to an axial slice of the brain.Yaw
-      = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose
-      rightward). Roll = rotation around anterior-posterior axis, like tilting (+
-      is rotating the right side downward).
-    required: false
   - name: insertion_angle_yaw_in_deg
     dtype: float
     doc: The yaw angle of the probe at the time of insertion, in degrees. Yaw = rotation
       around dorsal-ventral axis, like shaking (+ is rotating the nose rightward).
       Zero is defined as the probe being parallel to an sagittal slice of the brain.
+      The order of rotations is yaw, pitch, roll.
+    required: false
+  - name: insertion_angle_pitch_in_deg
+    dtype: float
+    doc: The pitch angle of the probe at the time of insertion, in degrees. Pitch
+      = rotation around left-right axis, like nodding (+ is rotating the nose upward).
+      Zero is defined as the probe being parallel to an axial slice of the brain.
+      The order of rotations is yaw, pitch, roll.
     required: false
   - name: insertion_angle_roll_in_deg
     dtype: float
-    doc: 'The roll angle of the probe at the time of insertion, in degrees. Roll =
+    doc: The roll angle of the probe at the time of insertion, in degrees. Roll =
       rotation around anterior-posterior axis, like tilting (+ is rotating the right
       side downward). Zero is defined as the probe being parallel to a coronal slice
-      of the brain. '
+      of the brain. The order of rotations is yaw, pitch, roll.
     required: false
 - neurodata_type_def: ChannelsTable
   neurodata_type_inc: DynamicTable
@@ -226,6 +225,9 @@ groups:
   - name: reference_contact
     neurodata_type_inc: DynamicTableRegion
     doc: The row in a ContactsTable that represents the contact used as a reference.
+      This is useful for differential or bipolar recordings. The data in the `ExtracellularSeries`
+      corresponding to each channel (row) of this table is equal to the voltage from
+      `contact` minus the voltage from `reference_contact`.
     quantity: '?'
   - name: filter
     neurodata_type_inc: VectorData

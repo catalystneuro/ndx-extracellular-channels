@@ -12,7 +12,7 @@ def main():
         author=[
             "Alessio Buccino",
             "Kyu Hyun Lee",
-            "Heberto Mayorquin",
+            "Ramon Heberto Mayorquin",
             "Cody Baker",
             "Matt Avaylon",
             "Ryan Ly",
@@ -252,25 +252,28 @@ def main():
                 dtype="text",
                 required=False,
             ),
-            NWBAttributeSpec(
-                name="insertion_angle_pitch_in_deg",
-                doc=(
-                    "The pitch angle of the probe at the time of insertion, in degrees. "
-                    "Pitch = rotation around left-right axis, like nodding (+ is rotating the nose upward). "
-                    "Zero is defined as the probe being parallel to an axial slice of the brain."
-                    "Yaw = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward). "
-                    "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
-                    "downward)."
-                ),
-                dtype="float",
-                required=False,
-            ),
+            # TODO confirm with surgical experts that these make sense for describing the angle of insertion
+            # or should we use stereotactic arm angles (if they can be well described) instead.
+            # NOTE that these terms and rotation order make sense for rotating the head, but not necessarily
+            # for thinking about rotations of the probe in a way that makes sense for understanding or describing.
             NWBAttributeSpec(
                 name="insertion_angle_yaw_in_deg",
                 doc=(
                     "The yaw angle of the probe at the time of insertion, in degrees. "
                     "Yaw = rotation around dorsal-ventral axis, like shaking (+ is rotating the nose rightward). "
-                    "Zero is defined as the probe being parallel to an sagittal slice of the brain."
+                    "Zero is defined as the probe being parallel to an sagittal slice of the brain. "
+                    "The order of rotations is yaw, pitch, roll."
+                ),
+                dtype="float",
+                required=False,
+            ),
+            NWBAttributeSpec(
+                name="insertion_angle_pitch_in_deg",
+                doc=(
+                    "The pitch angle of the probe at the time of insertion, in degrees. "
+                    "Pitch = rotation around left-right axis, like nodding (+ is rotating the nose upward). "
+                    "Zero is defined as the probe being parallel to an axial slice of the brain. "
+                    "The order of rotations is yaw, pitch, roll."
                 ),
                 dtype="float",
                 required=False,
@@ -281,6 +284,7 @@ def main():
                     "The roll angle of the probe at the time of insertion, in degrees. "
                     "Roll = rotation around anterior-posterior axis, like tilting (+ is rotating the right side "
                     "downward). Zero is defined as the probe being parallel to a coronal slice of the brain. "
+                    "The order of rotations is yaw, pitch, roll."
                 ),
                 dtype="float",
                 required=False,
@@ -310,7 +314,12 @@ def main():
             NWBDatasetSpec(
                 name="reference_contact",
                 neurodata_type_inc="DynamicTableRegion",
-                doc="The row in a ContactsTable that represents the contact used as a reference.",
+                doc=(
+                    "The row in a ContactsTable that represents the contact used as a reference. This is useful for "
+                    "differential or bipolar recordings. The data in the `ExtracellularSeries` corresponding to each "
+                    "channel (row) of this table is equal to the voltage from `contact` minus the "
+                    "voltage from `reference_contact`."
+                ),
                 quantity="?",
             ),
             NWBDatasetSpec(
