@@ -97,7 +97,6 @@ classDiagram
         name : str
         description : str
         probe : Probe
-        probe_insertion : ProbeInsertion, optional
         position_reference : str, optional
         electrical_reference_description : str, optional
         ground : str, optional
@@ -145,6 +144,7 @@ classDiagram
                 identifier : str
                 --> Usually the serial number
                 probe_model : ProbeModel
+                probe_insertion : ProbeInsertion, optional
             }
 
             class ProbeModel {
@@ -184,11 +184,11 @@ classDiagram
     }
 
     Probe *..> ProbeModel : links to probe_model
+    Probe *--> ProbeInsertion: might contain ProbeInsertion
     ProbeModel *--> ContactsTable : contains
     ExtracellularSeries ..> ChannelsTable : links to channels
     ChannelsTable *..> Probe : links to probe
     ChannelsTable ..> ContactsTable : row reference to contact
-    ChannelsTable *--> ProbeInsertion: might contain ProbeInsertion
     note for ChannelsTable "ChannelsTable is no longer global"
 ```
 
