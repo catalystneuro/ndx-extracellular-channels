@@ -64,13 +64,6 @@ def test_all_classes():
     # TODO put this into /general/device_models
     nwbfile.add_device(pm)
 
-    probe = Probe(
-        name="Neuropixels Probe 1",
-        identifier="28948291",
-        probe_model=pm,
-    )
-    nwbfile.add_device(probe)
-
     pi = ProbeInsertion(
         position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
         hemisphere="left",
@@ -82,6 +75,14 @@ def test_all_classes():
         insertion_angle_yaw_in_deg=0.0,
     )
 
+    probe = Probe(
+        name="Neuropixels Probe 1",
+        identifier="28948291",
+        probe_model=pm,
+        probe_insertion=pi,
+    )
+    nwbfile.add_device(probe)
+
     channels_table = ChannelsTable(
         name="Neuropixels1ChannelsTable",  # test custom name
         description="Test channels table",
@@ -90,7 +91,6 @@ def test_all_classes():
         position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
         position_confirmation_method="Histology",
         probe=probe,
-        probe_insertion=pi,
     )
 
     # all of the keyword arguments in add_row are optional
@@ -193,16 +193,16 @@ def test_all_classes():
         npt.assert_array_equal(read_channels_table["confirmed_brain_area"].data[:], ["CA3", "CA3"])
 
         assert (
-            read_channels_table.probe_insertion.position_reference
+            read_channels_table.probe.probe_insertion.position_reference
             == "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface."
         )
-        assert read_channels_table.probe_insertion.hemisphere == "left"
-        assert read_channels_table.probe_insertion.depth_in_mm == 10.0
-        assert read_channels_table.probe_insertion.insertion_position_ap_in_mm == 2.0
-        assert read_channels_table.probe_insertion.insertion_position_ml_in_mm == -4.0
-        assert read_channels_table.probe_insertion.insertion_angle_roll_in_deg == -10.0
-        assert read_channels_table.probe_insertion.insertion_angle_pitch_in_deg == 0.0
-        assert read_channels_table.probe_insertion.insertion_angle_yaw_in_deg == 0.0
+        assert read_channels_table.probe.probe_insertion.hemisphere == "left"
+        assert read_channels_table.probe.probe_insertion.depth_in_mm == 10.0
+        assert read_channels_table.probe.probe_insertion.insertion_position_ap_in_mm == 2.0
+        assert read_channels_table.probe.probe_insertion.insertion_position_ml_in_mm == -4.0
+        assert read_channels_table.probe.probe_insertion.insertion_angle_roll_in_deg == -10.0
+        assert read_channels_table.probe.probe_insertion.insertion_angle_pitch_in_deg == 0.0
+        assert read_channels_table.probe.probe_insertion.insertion_angle_yaw_in_deg == 0.0
 
         assert read_nwbfile.devices["Neuropixels Probe 1"].name == "Neuropixels Probe 1"
         assert read_nwbfile.devices["Neuropixels Probe 1"].identifier == "28948291"

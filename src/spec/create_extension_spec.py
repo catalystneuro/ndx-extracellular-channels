@@ -128,6 +128,14 @@ def main():
         neurodata_type_def="Probe",
         neurodata_type_inc="Device",
         doc="Specific instance of a neural probe object.",
+        groups=[
+            NWBGroupSpec(
+                name="probe_insertion",
+                neurodata_type_inc="ProbeInsertion",
+                doc="Information about the insertion of a probe into the brain.",
+                quantity="?",
+            ),
+        ],
         links=[
             NWBLinkSpec(
                 name="probe_model",
@@ -297,14 +305,6 @@ def main():
         neurodata_type_inc="DynamicTable",
         doc="Metadata about the channels used in an extracellular recording from a single probe.",
         default_name="ChannelsTable",
-        groups=[
-            NWBGroupSpec(
-                name="probe_insertion",
-                neurodata_type_inc="ProbeInsertion",
-                doc="Information about the insertion of a probe into the brain.",
-                quantity="?",
-            ),
-        ],
         datasets=[
             NWBDatasetSpec(
                 name="contact",

@@ -126,6 +126,11 @@ groups:
     dtype: text
     doc: Identifier of the probe, usually the serial number.
     required: false
+  groups:
+  - name: probe_insertion
+    neurodata_type_inc: ProbeInsertion
+    doc: Information about the insertion of a probe into the brain.
+    quantity: '?'
   links:
   - name: probe_model
     target_type: ProbeModel
@@ -286,11 +291,6 @@ groups:
     neurodata_type_inc: VectorData
     dtype: text
     doc: The brain area of the actual contact position, e.g., "CA1".
-    quantity: '?'
-  groups:
-  - name: probe_insertion
-    neurodata_type_inc: ProbeInsertion
-    doc: Information about the insertion of a probe into the brain.
     quantity: '?'
   links:
   - name: probe

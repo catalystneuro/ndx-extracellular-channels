@@ -201,136 +201,6 @@ class TestProbeModelRoundTrip(NWBH5IOFlexMixin, TestCase):
         return nwbfile.devices["Neuropixels 1.0 Probe Model"]
 
 
-class TestProbe(TestCase):
-    """Simple unit test for creating a Probe."""
-
-    def test_constructor_minimal(self):
-        """Test that the constructor for ProbeModel sets values as expected."""
-        ct = ContactsTable(
-            description="Test contacts table",
-        )
-        ct.add_row(
-            relative_position_in_mm=[10.0, 10.0],
-            shape="circle",
-        )
-
-        pm = ProbeModel(
-            description="A neuropixels probe",
-            model="Neuropixels 1.0",
-            manufacturer="IMEC",
-            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
-            contacts_table=ct,
-        )
-
-        probe = Probe(
-            name="Neuropixels Probe 1",
-            probe_model=pm,
-        )
-
-        assert probe.name == "Neuropixels Probe 1"
-        assert probe.identifier is None
-        assert probe.probe_model is pm
-
-    def test_constructor(self):
-        """Test that the constructor for ProbeModel sets values as expected."""
-        ct = ContactsTable(
-            description="Test contacts table",
-        )
-        ct.add_row(
-            relative_position_in_mm=[10.0, 10.0],
-            shape="circle",
-        )
-
-        pm = ProbeModel(
-            model="Neuropixels 1.0",
-            description="A neuropixels probe",
-            manufacturer="IMEC",
-            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
-            contacts_table=ct,
-        )
-
-        probe = Probe(
-            name="Neuropixels Probe 1",
-            identifier="28948291",
-            probe_model=pm,
-        )
-
-        assert probe.identifier == "28948291"
-
-
-class TestProbeRoundTrip(NWBH5IOFlexMixin, TestCase):
-    """Simple roundtrip test for a Probe."""
-
-    def getContainerType(self):
-        return "Probe"
-
-    def addContainer(self):
-        ct = ContactsTable(
-            description="Test contacts table",
-        )
-        ct.add_row(
-            relative_position_in_mm=[10.0, 10.0],
-            shape="circle",
-        )
-
-        pm = ProbeModel(
-            model="Neuropixels 1.0",
-            description="A neuropixels probe",
-            manufacturer="IMEC",
-            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
-            contacts_table=ct,
-        )
-        # TODO after integration in core, change this to add_device_model which puts it in
-        # /general/devices/models or /general/device_models.
-        # Alternatively, ProbeModel is a child of Probe and if there are multiple Probe objects
-        # that use the same ProbeModel, then create a link
-        self.nwbfile.add_device(pm)
-
-        probe = Probe(
-            name="Neuropixels Probe 1",
-            identifier="28948291",
-            probe_model=pm,
-        )
-        self.nwbfile.add_device(probe)
-
-    def getContainer(self, nwbfile: NWBFile):
-        return nwbfile.devices["Neuropixels Probe 1"]
-
-
-def _create_test_probe():
-    ct = ContactsTable(
-        description="Test contacts table",
-    )
-    ct.add_row(
-        relative_position_in_mm=[10.0, 10.0],
-        shape="circle",
-    )
-    ct.add_row(
-        relative_position_in_mm=[10.0, 10.0],
-        shape="circle",
-    )
-    ct.add_row(
-        relative_position_in_mm=[10.0, 10.0],
-        shape="circle",
-    )
-
-    pm = ProbeModel(
-        name="Neuropixels 1.0",
-        model="Neuropixels 1.0",
-        description="A neuropixels probe",
-        manufacturer="IMEC",
-        planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
-        contacts_table=ct,
-    )
-
-    probe = Probe(
-        name="Neuropixels Probe 1",
-        identifier="28948291",
-        probe_model=pm,  # TODO rename as model?
-    )
-    return probe
-
-
 class TestProbeInsertion(TestCase):
     """Simple unit test for creating a ProbeInsertion."""
 
@@ -372,6 +242,7 @@ class TestProbeInsertion(TestCase):
         assert pi.insertion_angle_yaw_in_deg == 0.0
 
     def test_constructor_with_dv(self):
+        """Test creating a ProbeInsertion with insertion_position_dv_in_mm instead of depth_in_mm"""
         pi = ProbeInsertion(
             name="ProbeInsertion",  # test custom name
             position_reference="Bregma at the cortical surface.",
@@ -387,6 +258,7 @@ class TestProbeInsertion(TestCase):
         assert pi.name == "ProbeInsertion"
         assert pi.position_reference == "Bregma at the cortical surface."
         assert pi.hemisphere == "left"
+        assert pi.depth_in_mm is None
         assert pi.insertion_position_ap_in_mm == 2.0
         assert pi.insertion_position_ml_in_mm == -4.0
         assert pi.insertion_position_dv_in_mm == -10.0
@@ -422,7 +294,7 @@ class TestProbeInsertionDepthRoundTrip(NWBH5IOFlexMixin, TestCase):
 
 
 class TestProbeInsertionDVRoundTrip(NWBH5IOFlexMixin, TestCase):
-    """Simple roundtrip test for a ProbeInsertion."""
+    """Simple roundtrip test for a ProbeInsertion with insertion_position_dv_in_mm instead of depth_in_mm."""
 
     def getContainerType(self):
         return "ProbeInsertion"
@@ -446,6 +318,147 @@ class TestProbeInsertionDVRoundTrip(NWBH5IOFlexMixin, TestCase):
 
     def getContainer(self, nwbfile: NWBFile):
         return nwbfile.scratch["ProbeInsertion"]
+
+
+class TestProbe(TestCase):
+    """Simple unit test for creating a Probe."""
+
+    def test_constructor_minimal(self):
+        """Test that the constructor for ProbeModel sets values as expected."""
+        ct = ContactsTable(
+            description="Test contacts table",
+        )
+        ct.add_row(
+            relative_position_in_mm=[10.0, 10.0],
+            shape="circle",
+        )
+
+        pm = ProbeModel(
+            description="A neuropixels probe",
+            model="Neuropixels 1.0",
+            manufacturer="IMEC",
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+            contacts_table=ct,
+        )
+
+        probe = Probe(
+            name="Neuropixels Probe 1",
+            probe_model=pm,
+        )
+
+        assert probe.name == "Neuropixels Probe 1"
+        assert probe.identifier is None
+        assert probe.probe_model is pm
+        assert probe.probe_insertion is None
+
+    def test_constructor(self):
+        """Test that the constructor for ProbeModel sets values as expected."""
+        # NOTE: ProbeInsertion must be named "probe_insertion" when used in Probe. this is the default.
+        pi = ProbeInsertion()
+
+        ct = ContactsTable(
+            description="Test contacts table",
+        )
+        ct.add_row(
+            relative_position_in_mm=[10.0, 10.0],
+            shape="circle",
+        )
+
+        pm = ProbeModel(
+            model="Neuropixels 1.0",
+            description="A neuropixels probe",
+            manufacturer="IMEC",
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+            contacts_table=ct,
+        )
+
+        probe = Probe(
+            name="Neuropixels Probe 1",
+            identifier="28948291",
+            probe_model=pm,
+            probe_insertion=pi,
+        )
+
+        assert probe.identifier == "28948291"
+        assert probe.probe_insertion is pi
+        assert probe.probe_model is pm
+
+
+class TestProbeRoundTrip(NWBH5IOFlexMixin, TestCase):
+    """Simple roundtrip test for a Probe."""
+
+    def getContainerType(self):
+        return "Probe"
+
+    def addContainer(self):
+        # NOTE: ProbeInsertion must be named "probe_insertion" when used in Probe. this is the default.
+        pi = ProbeInsertion()
+
+        ct = ContactsTable(
+            description="Test contacts table",
+        )
+        ct.add_row(
+            relative_position_in_mm=[10.0, 10.0],
+            shape="circle",
+        )
+
+        pm = ProbeModel(
+            model="Neuropixels 1.0",
+            description="A neuropixels probe",
+            manufacturer="IMEC",
+            planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+            contacts_table=ct,
+        )
+        # TODO after integration in core, change this to add_device_model which puts it in
+        # /general/devices/models or /general/device_models.
+        # Alternatively, ProbeModel is a child of Probe and if there are multiple Probe objects
+        # that use the same ProbeModel, then create a link
+        self.nwbfile.add_device(pm)
+
+        probe = Probe(
+            name="Neuropixels Probe 1",
+            identifier="28948291",
+            probe_model=pm,
+            probe_insertion=pi,
+        )
+        self.nwbfile.add_device(probe)
+
+    def getContainer(self, nwbfile: NWBFile):
+        return nwbfile.devices["Neuropixels Probe 1"]
+
+
+def _create_test_probe():
+    ct = ContactsTable(
+        description="Test contacts table",
+    )
+    ct.add_row(
+        relative_position_in_mm=[10.0, 10.0],
+        shape="circle",
+    )
+    ct.add_row(
+        relative_position_in_mm=[10.0, 10.0],
+        shape="circle",
+    )
+    ct.add_row(
+        relative_position_in_mm=[10.0, 10.0],
+        shape="circle",
+    )
+
+    pm = ProbeModel(
+        name="Neuropixels 1.0",
+        model="Neuropixels 1.0",
+        description="A neuropixels probe",
+        manufacturer="IMEC",
+        planar_contour_in_um=[[-10.0, -10.0], [10.0, -10.0], [10.0, 10.0], [-10.0, 10.0]],
+        contacts_table=ct,
+    )
+
+    probe = Probe(
+        name="Neuropixels Probe 1",
+        identifier="28948291",
+        probe_model=pm,  # TODO rename as model?
+    )
+    return probe
 
 
 class TestChannelsTable(TestCase):
@@ -501,8 +514,6 @@ class TestChannelsTable(TestCase):
     def test_constructor_add_row(self):
         """Test that the constructor for ChannelsTable sets values as expected."""
         probe = _create_test_probe()
-        # NOTE: ProbeInsertion must be named "probe_insertion" when used in ChannelsTable. this is the default.
-        pi = ProbeInsertion()
 
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
@@ -512,7 +523,6 @@ class TestChannelsTable(TestCase):
             position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
             position_confirmation_method="Histology",
             probe=probe,
-            probe_insertion=pi,
         )
 
         ct.add_row(
@@ -550,7 +560,6 @@ class TestChannelsTable(TestCase):
         assert ct.position_reference == "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface."
         assert ct.position_confirmation_method == "Histology"
         assert ct.probe is probe
-        assert ct.probe_insertion is pi
         assert len(ct) == 2
         assert ct["contact"].data == [0, 1]
         assert ct["contact"].table is probe.probe_model.contacts_table
@@ -578,10 +587,6 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
         self.nwbfile.add_device(probe.probe_model)  # TODO change to add_device_model after integration in core
         self.nwbfile.add_device(probe)
 
-        pi = ProbeInsertion(
-            name="probe_insertion",
-        )
-
         ct = ChannelsTable(
             name="Neuropixels1ChannelsTable",  # test custom name
             description="Test channels table",
@@ -590,7 +595,6 @@ class TestChannelsTableRoundTrip(NWBH5IOFlexMixin, TestCase):
             position_reference="(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface.",
             position_confirmation_method="Histology",
             probe=probe,
-            probe_insertion=pi,
         )
 
         ct.add_row(
