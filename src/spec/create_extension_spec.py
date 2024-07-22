@@ -47,18 +47,6 @@ def main():
                 dtype="float",
                 dims=[["num_contacts", "x, y"], ["num_contacts", "x, y, z"]],
                 shape=[[None, 2], [None, 3]],
-                attributes=[
-                    NWBAttributeSpec(
-                        name="reference",
-                        doc=(
-                            "Reference point for the relative position coordinates and information about the "
-                            "coordinate system used, e.g., which direction is positive in the x direction "
-                            "(first element), which direction is positive in the y direction (second element), etc."
-                        ),
-                        dtype="text",
-                        required=False,
-                    )
-                ],
             ),
             NWBDatasetSpec(
                 name="contact_id",  # id is already used by DynamicTable

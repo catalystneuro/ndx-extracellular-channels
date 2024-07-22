@@ -172,7 +172,6 @@ classDiagram
                 --------------------------------------
                 id : VectorData[int]
                 relative_position_in_um : List[Tuple[float, float], Tuple[float, float, float]]
-                --> reference : str, optional
                 contact_id : VectorData[str], optional
                 shank_id : VectorData[str], optional
                 plane_axes : List[Tuple[int, int], Tuple[int, int, int]], optional

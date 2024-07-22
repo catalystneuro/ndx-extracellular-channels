@@ -55,13 +55,8 @@ class TestContactsTable(TestCase):
             height_in_um=10.0,
         )
 
-        # TODO might be nice to put this on the constructor of ContactsTable as relative_position__reference
-        # without using a custom mapper
-        ct["relative_position_in_um"].reference = "The bottom tip of the probe"
-
         assert ct.name == "ContactsTable"
         assert ct.description == "Test contacts table"
-        assert ct["relative_position_in_um"].reference == "The bottom tip of the probe"
 
         assert ct["relative_position_in_um"].data == [[10.0, 10.0], [20.0, 10.0]]
         assert ct["shape"].data == ["circle", "square"]

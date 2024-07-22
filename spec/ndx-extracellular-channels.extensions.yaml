@@ -19,14 +19,6 @@ groups:
     - - null
       - 3
     doc: Relative position of the contact in micrometers, relative to `reference`.
-    attributes:
-    - name: reference
-      dtype: text
-      doc: Reference point for the relative position coordinates and information about
-        the coordinate system used, e.g., which direction is positive in the x direction
-        (first element), which direction is positive in the y direction (second element),
-        etc.
-      required: false
   - name: contact_id
     neurodata_type_inc: VectorData
     dtype: text
