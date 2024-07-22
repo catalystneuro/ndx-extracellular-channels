@@ -30,7 +30,7 @@ def test_all_classes():
     )
     # for demonstration, mix and match different shapes. np.nan means the radius/width/height does not apply
     contacts_table.add_row(
-        relative_position_in_mm=[10.0, 10.0],
+        relative_position_in_um=[10.0, 10.0],
         contact_id="C1",
         shank_id="shank0",
         plane_axes=[[1.0, 0.0], [0.0, 1.0]],
@@ -40,7 +40,7 @@ def test_all_classes():
         height_in_um=np.nan,
     )
     contacts_table.add_row(
-        relative_position_in_mm=[20.0, 10.0],
+        relative_position_in_um=[20.0, 10.0],
         contact_id="C2",
         shank_id="shank0",
         plane_axes=[[1 / np.sqrt(2), 1 / np.sqrt(2)], [-1 / np.sqrt(2), 1 / np.sqrt(2)]],
@@ -220,7 +220,7 @@ def test_all_classes():
 
         assert read_contacts_table.name == "contacts_table"
         assert read_contacts_table.description == "Test contacts table"
-        npt.assert_array_equal(read_contacts_table["relative_position_in_mm"].data[:], [[10.0, 10.0], [20.0, 10.0]])
+        npt.assert_array_equal(read_contacts_table["relative_position_in_um"].data[:], [[10.0, 10.0], [20.0, 10.0]])
         npt.assert_array_equal(read_contacts_table["shape"].data[:], ["circle", "square"])
         npt.assert_array_equal(read_contacts_table["contact_id"].data[:], ["C1", "C2"])
         npt.assert_array_equal(read_contacts_table["shank_id"].data[:], ["shank0", "shank0"])

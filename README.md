@@ -171,7 +171,7 @@ classDiagram
                 columns
                 --------------------------------------
                 id : VectorData[int]
-                relative_position_in_mm : List[Tuple[float, float], Tuple[float, float, float]]
+                relative_position_in_um : List[Tuple[float, float], Tuple[float, float, float]]
                 --> reference : str, optional
                 contact_id : VectorData[str], optional
                 shank_id : VectorData[str], optional

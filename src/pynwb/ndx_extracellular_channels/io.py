@@ -80,7 +80,7 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
     ndx_extracellular_channels.Probe.probe_model.manufacturer -> probeinterface.Probe.manufacturer
     ndx_extracellular_channels.Probe.probe_model.ndim -> probeinterface.Probe.ndim
     ndx_extracellular_channels.Probe.probe_model.planar_contour_in_um -> probeinterface.Probe.probe_planar_contour
-    ndx_extracellular_channels.Probe.probe_model.contacts_table["relative_position_in_mm"] ->
+    ndx_extracellular_channels.Probe.probe_model.contacts_table["relative_position_in_um"] ->
         probeinterface.Probe.contact_positions
     ndx_extracellular_channels.Probe.probe_model.contacts_table["shape"] -> probeinterface.Probe.contact_shapes
     ndx_extracellular_channels.Probe.probe_model.contacts_table["contact_id"] -> probeinterface.Probe.contact_ids
@@ -121,7 +121,7 @@ def to_probeinterface(ndx_probe: ndx_extracellular_channels.Probe) -> probeinter
     possible_shape_keys = ["radius_in_um", "width_in_um", "height_in_um"]
     contacts_table = ndx_probe.probe_model.contacts_table
 
-    positions.append(contacts_table["relative_position_in_mm"][:])
+    positions.append(contacts_table["relative_position_in_um"][:])
     shapes.append(contacts_table["shape"][:])
     if "contact_id" in contacts_table.colnames:
         if contact_ids is None:
@@ -198,7 +198,7 @@ def _single_probe_to_ndx_probe(
 
     for index in np.arange(probe.get_contact_count()):
         kwargs = dict(
-            relative_position_in_mm=probe.contact_positions[index],
+            relative_position_in_um=probe.contact_positions[index],
             plane_axes=probe.contact_plane_axes[index],
             shape=contacts_arr["contact_shapes"][index],
         )

@@ -113,7 +113,7 @@ def test_from_probeinterface():
         assert nwbfile.devices["probe0"].probe_model.manufacturer == "Neuronexus"
         assert nwbfile.devices["probe0"].probe_model.ndim == 2
         npt.assert_array_equal(nwbfile.devices["probe0"].probe_model.planar_contour_in_um, polygon)
-        npt.assert_allclose(nwbfile.devices["probe0"].probe_model.contacts_table.relative_position_in_mm, positions)
+        npt.assert_allclose(nwbfile.devices["probe0"].probe_model.contacts_table.relative_position_in_um, positions)
         npt.assert_array_equal(nwbfile.devices["probe0"].probe_model.contacts_table["shape"].data[:], "circle")
         npt.assert_array_equal(nwbfile.devices["probe0"].probe_model.contacts_table["radius_in_um"].data[:], 5.0)
 
@@ -124,7 +124,7 @@ def test_from_probeinterface():
         assert nwbfile.devices["probe1"].probe_model.ndim == 2
         npt.assert_allclose(nwbfile.devices["probe1"].probe_model.planar_contour_in_um, probe1.probe_planar_contour)
         npt.assert_allclose(
-            nwbfile.devices["probe1"].probe_model.contacts_table.relative_position_in_mm, probe1.contact_positions
+            nwbfile.devices["probe1"].probe_model.contacts_table.relative_position_in_um, probe1.contact_positions
         )
         npt.assert_array_equal(nwbfile.devices["probe1"].probe_model.contacts_table["shape"].data[:], "circle")
         npt.assert_array_equal(
@@ -138,7 +138,7 @@ def test_from_probeinterface():
         assert nwbfile.devices["probe2"].probe_model.ndim == 2
         npt.assert_allclose(nwbfile.devices["probe2"].probe_model.planar_contour_in_um, probe2.probe_planar_contour)
         npt.assert_allclose(
-            nwbfile.devices["probe2"].probe_model.contacts_table.relative_position_in_mm, probe2.contact_positions
+            nwbfile.devices["probe2"].probe_model.contacts_table.relative_position_in_um, probe2.contact_positions
         )
         npt.assert_array_equal(nwbfile.devices["probe2"].probe_model.contacts_table["shape"].data[:], "square")
         npt.assert_array_equal(
@@ -154,7 +154,7 @@ def test_from_probeinterface():
             nwbfile.devices["renamed_probe3"].probe_model.planar_contour_in_um, probe3.probe_planar_contour
         )
         npt.assert_allclose(
-            nwbfile.devices["renamed_probe3"].probe_model.contacts_table.relative_position_in_mm,
+            nwbfile.devices["renamed_probe3"].probe_model.contacts_table.relative_position_in_um,
             probe3.contact_positions,
         )
         npt.assert_array_equal(nwbfile.devices["renamed_probe3"].probe_model.contacts_table["shape"].data[:], "circle")
@@ -184,8 +184,8 @@ def test_to_probeinterface():
             description="a table with electrode contacts",
             columns=[
                 pynwb.core.VectorData(
-                    name="relative_position_in_mm",
-                    description="the relative position of the contact in mm",
+                    name="relative_position_in_um",
+                    description="the relative position of the contact in micrometers",
                     data=[
                         (0.0, 0.0),
                         (0.0, 20.0),
@@ -241,7 +241,7 @@ def test_to_probeinterface():
     assert pi_probe0.serial_number == "0123"
     assert pi_probe0.model_name == "a1x32-edge-5mm-20-177_H32"
     assert pi_probe0.manufacturer == "Neuronexus"
-    npt.assert_array_equal(pi_probe0.contact_positions, probe_model0.contacts_table.relative_position_in_mm)
+    npt.assert_array_equal(pi_probe0.contact_positions, probe_model0.contacts_table.relative_position_in_um)
     npt.assert_array_equal(pi_probe0.contact_shapes, "circle")
     npt.assert_array_equal(pi_probe0.to_numpy()["radius"], 5.0)
 
@@ -251,7 +251,7 @@ def test_to_probeinterface():
 
     # for testing, mix and match different shapes. np.nan means the radius/width/height does not apply
     ct2.add_row(
-        relative_position_in_mm=[10.0, 10.0],
+        relative_position_in_um=[10.0, 10.0],
         shape="circle",
         contact_id="C1",
         shank_id="shank0",
@@ -261,7 +261,7 @@ def test_to_probeinterface():
         height_in_um=np.nan,
     )
     ct2.add_row(
-        relative_position_in_mm=[20.0, 10.0],
+        relative_position_in_um=[20.0, 10.0],
         shape="square",
         contact_id="C2",
         shank_id="shank0",
@@ -292,7 +292,7 @@ def test_to_probeinterface():
     assert pi_probe1.serial_number == "7890"
     assert pi_probe1.model_name == "Neuropixels 1.0"
     assert pi_probe1.manufacturer == "IMEC"
-    npt.assert_array_equal(pi_probe1.contact_positions, probe_model1.contacts_table.relative_position_in_mm)
+    npt.assert_array_equal(pi_probe1.contact_positions, probe_model1.contacts_table.relative_position_in_um)
     npt.assert_array_equal(pi_probe1.contact_shapes, ["circle", "square"])
     npt.assert_array_equal(
         pi_probe1.contact_plane_axes,
@@ -320,6 +320,6 @@ def test_to_probeinterface():
         assert pi_probe.serial_number == "0123"
         assert pi_probe.model_name == "a1x32-edge-5mm-20-177_H32"
         assert pi_probe.manufacturer == "Neuronexus"
-        npt.assert_array_equal(pi_probe.contact_positions, probe_model0.contacts_table.relative_position_in_mm)
+        npt.assert_array_equal(pi_probe.contact_positions, probe_model0.contacts_table.relative_position_in_um)
         npt.assert_array_equal(pi_probe.to_numpy()["radius"], 5.0)
         npt.assert_array_equal(pi_probe.contact_shapes, "circle")

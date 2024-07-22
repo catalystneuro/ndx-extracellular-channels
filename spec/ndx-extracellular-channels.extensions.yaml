@@ -5,7 +5,7 @@ groups:
   doc: Metadata about the contacts of a probe, compatible with the ProbeInterface
     specification.
   datasets:
-  - name: relative_position_in_mm
+  - name: relative_position_in_um
     neurodata_type_inc: VectorData
     dtype: float
     dims:
@@ -18,7 +18,7 @@ groups:
       - 2
     - - null
       - 3
-    doc: Relative position of the contact in millimeters, relative to `reference`.
+    doc: Relative position of the contact in micrometers, relative to `reference`.
     attributes:
     - name: reference
       dtype: text

@@ -41,9 +41,9 @@ def main():
         default_name="contacts_table",
         datasets=[
             NWBDatasetSpec(
-                name="relative_position_in_mm",
+                name="relative_position_in_um",
                 neurodata_type_inc="VectorData",
-                doc="Relative position of the contact in millimeters, relative to `reference`.",
+                doc="Relative position of the contact in micrometers, relative to `reference`.",
                 dtype="float",
                 dims=[["num_contacts", "x, y"], ["num_contacts", "x, y, z"]],
                 shape=[[None, 2], [None, 3]],
