@@ -1,0 +1,338 @@
+groups:
+- neurodata_type_def: ContactsTable
+  neurodata_type_inc: DynamicTable
+  default_name: contacts_table
+  doc: Metadata about the contacts of a probe, compatible with the ProbeInterface
+    specification.
+  datasets:
+  - name: relative_position_in_um
+    neurodata_type_inc: VectorData
+    dtype: float
+    dims:
+    - - num_contacts
+      - x, y
+    - - num_contacts
+      - x, y, z
+    shape:
+    - - null
+      - 2
+    - - null
+      - 3
+    doc: Relative position of the contact in micrometers, relative to `reference`.
+  - name: contact_id
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: Unique ID of the contact
+    quantity: '?'
+  - name: shank_id
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: Shank ID of the contact
+    quantity: '?'
+  - name: plane_axes
+    neurodata_type_inc: VectorData
+    dtype: float
+    dims:
+    - - num_contacts
+      - v1, v2
+      - x, y
+    - - num_contacts
+      - v1, v2
+      - x, y, z
+    shape:
+    - - null
+      - 2
+      - 2
+    - - null
+      - 2
+      - 3
+    doc: The axes defining the contact plane for each contact. It can be used for
+      contact-wise rotations. For 2D probes, provide two points (v1x, v1y) and (v2x,
+      v2y). Axis 1 is defined by the vector from (0, 0) to (v1x, v1y). Axis 2 is defined
+      by the vector from (0, 0) to (v2x, v2y). So for one contact, a 45 degree rotation
+      would be [[1 / sqrt(2), 1 / sqrt(2)], [-1 / sqrt(2), 1 / sqrt(2)]]. The default
+      is [[1, 0], [0, 1]]. For 3D probes, provide two points (v1x, v1y, v1z), (v2x,
+      v2y, v2z). See 'contact_plane_axes' in https://probeinterface.readthedocs.io/en/main/format_spec.html
+      for more details.
+    quantity: '?'
+  - name: shape
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: Shape of the contact; e.g. 'circle'
+    quantity: '?'
+  - name: radius_in_um
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Radius of a circular contact, in micrometers.
+    quantity: '?'
+  - name: width_in_um
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Width of a rectangular or square contact, in micrometers.
+    quantity: '?'
+  - name: height_in_um
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Height of a rectangular contact, in micrometers.
+    quantity: '?'
+- neurodata_type_def: ProbeModel
+  neurodata_type_inc: Device
+  doc: Neural probe object, compatible with the ProbeInterface specification. The
+    name of the object should be the model name of the probe, e.g., "Neuropixels 1.0".
+  attributes:
+  - name: ndim
+    dtype: int
+    default_value: 2
+    doc: dimension of the probe
+    required: false
+  - name: model
+    dtype: text
+    doc: Name of the model of the probe, e.g., "Neuropixels 1.0".
+  - name: planar_contour_in_um
+    dtype: float
+    dims:
+    - - num_points
+      - x, y
+    - - num_points
+      - x, y, z
+    shape:
+    - - null
+      - 2
+    - - null
+      - 3
+    doc: The coordinates of the nodes of the polygon that describe the shape (contour)
+      of the probe, in micrometers. The first and last points are connected to close
+      the polygon. e.g., [(-20., -30.), (20., -110.), (60., -30.), (60., 190.), (-20.,
+      190.)]. Coordinates can be in 2D or 3D. See 'probe_planar_contour' in https://probeinterface.readthedocs.io/en/main/format_spec.html
+      for more details.
+    required: false
+  groups:
+  - name: contacts_table
+    neurodata_type_inc: ContactsTable
+    doc: Neural probe contacts, compatible with the ProbeInterface specification
+- neurodata_type_def: Probe
+  neurodata_type_inc: Device
+  doc: Specific instance of a neural probe object.
+  attributes:
+  - name: identifier
+    dtype: text
+    doc: Identifier of the probe, usually the serial number.
+    required: false
+  groups:
+  - name: probe_insertion
+    neurodata_type_inc: ProbeInsertion
+    doc: Information about the insertion of a probe into the brain.
+    quantity: '?'
+  links:
+  - name: probe_model
+    target_type: ProbeModel
+    doc: The model of the probe used to record the data.
+- neurodata_type_def: ProbeInsertion
+  neurodata_type_inc: NWBContainer
+  default_name: probe_insertion
+  doc: Metadata about the insertion of a probe into the brain, which can be used to
+    determine the location of the probe in the brain.
+  attributes:
+  - name: insertion_position_ap_in_mm
+    dtype: float
+    doc: Anteroposterior (AP) stereotactic coordinate of where the probe was inserted,
+      in millimeters. + is anterior. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    required: false
+  - name: insertion_position_ml_in_mm
+    dtype: float
+    doc: Mediolateral (ML) stereotactic coordinate of where the probe was inserted,
+      in millimeters. + is right. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    required: false
+  - name: insertion_position_dv_in_mm
+    dtype: float
+    doc: Dorsoventral (DV) stereotactic coordinate of where the probe was inserted,
+      in millimeters. + is up. Coordinate is relative to the zero-point described
+      in `position_reference`. The zero-point is typically the surface of the brain,
+      so this value is typically 0.
+    required: false
+  - name: depth_in_mm
+    dtype: float
+    doc: Depth that the probe was driven along `insertion_angle` starting from `insertion_position_{X}_in_mm`,
+      in millimeters.
+    required: false
+  - name: position_reference
+    dtype: text
+    doc: Location of the origin (0, 0, 0) for `insertion_position_{X}_in_mm` coordinates,
+      e.g., "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface".
+    required: false
+  - name: hemisphere
+    dtype: text
+    doc: The hemisphere ("left" or "right") of the targeted location of the optogenetic
+      stimulus site. Should be consistent with `insertion_position_in_mm.ml` coordinate
+      (left = ml < 0, right = ml > 0).
+    required: false
+  - name: insertion_angle_yaw_in_deg
+    dtype: float
+    doc: The yaw angle of the probe at the time of insertion, in degrees. Yaw = rotation
+      around dorsal-ventral axis, like shaking (+ is rotating the nose rightward).
+      Zero is defined as the probe being parallel to an sagittal slice of the brain.
+      The order of rotations is yaw, pitch, roll.
+    required: false
+  - name: insertion_angle_pitch_in_deg
+    dtype: float
+    doc: The pitch angle of the probe at the time of insertion, in degrees. Pitch
+      = rotation around left-right axis, like nodding (+ is rotating the nose upward).
+      Zero is defined as the probe being parallel to an axial slice of the brain.
+      The order of rotations is yaw, pitch, roll.
+    required: false
+  - name: insertion_angle_roll_in_deg
+    dtype: float
+    doc: The roll angle of the probe at the time of insertion, in degrees. Roll =
+      rotation around anterior-posterior axis, like tilting (+ is rotating the right
+      side downward). Zero is defined as the probe being parallel to a coronal slice
+      of the brain. The order of rotations is yaw, pitch, roll.
+    required: false
+- neurodata_type_def: ChannelsTable
+  neurodata_type_inc: DynamicTable
+  default_name: ChannelsTable
+  doc: Metadata about the channels used in an extracellular recording from a single
+    probe.
+  attributes:
+  - name: position_reference
+    dtype: text
+    doc: Location of the origin (0, 0, 0) for `{X}_position_{Y}_in_mm` coordinates,
+      e.g., "(AP, ML, DV) = (0, 0, 0) corresponds to bregma at the cortical surface".
+    required: false
+  - name: electrical_reference_description
+    dtype: text
+    doc: The electrical reference used for the recording; e.g., "common average reference",
+      "probe tip".
+    required: false
+  - name: ground
+    dtype: text
+    doc: The ground used for the recording; e.g., "external wire in CSF", "skull screw
+      over frontal cortex".
+    required: false
+  - name: position_confirmation_method
+    dtype: text
+    doc: Description of the method used to confirm the position of the contacts or
+      brain area, e.g., "histology", "MRI".
+    required: false
+  datasets:
+  - name: contact
+    neurodata_type_inc: DynamicTableRegion
+    doc: The row in a ContactsTable that represents the contact used as a channel.
+  - name: reference_contact
+    neurodata_type_inc: DynamicTableRegion
+    doc: The row in a ContactsTable that represents the contact used as a reference.
+      This is useful for differential or bipolar recordings. The data in the `ExtracellularSeries`
+      corresponding to each channel (row) of this table is equal to the voltage from
+      `contact` minus the voltage from `reference_contact`.
+    quantity: '?'
+  - name: filter
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: The filter used on the raw (wideband) voltage data from this contact, including
+      the filter name and frequency cutoffs, e.g., "High-pass filter at 300 Hz."
+    quantity: '?'
+  - name: estimated_position_ap_in_mm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Anteroposterior (AP) stereotactic coordinate of the estimated contact position,
+      in millimeters. + is anterior. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    quantity: '?'
+  - name: estimated_position_ml_in_mm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Mediolateral (ML) stereotactic coordinate of the estimated contact position,
+      in millimeters. + is right. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    quantity: '?'
+  - name: estimated_position_dv_in_mm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Dorsoventral (DV) stereotactic coordinate of the estimated contact position,
+      in millimeters. + is up. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    quantity: '?'
+  - name: estimated_brain_area
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: The brain area of the estimated contact position, e.g., "CA1".
+    quantity: '?'
+  - name: confirmed_position_ap_in_mm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Anteroposterior (AP) stereotactic coordinate of the confirmed contact position,
+      in millimeters. + is anterior. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    quantity: '?'
+  - name: confirmed_position_ml_in_mm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Mediolateral (ML) stereotactic coordinate of the confirmed contact position,
+      in millimeters. + is right. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    quantity: '?'
+  - name: confirmed_position_dv_in_mm
+    neurodata_type_inc: VectorData
+    dtype: float
+    doc: Dorsoventral (DV) stereotactic coordinate of the confirmed contact position,
+      in millimeters. + is up. Coordinate is relative to the zero-point described
+      in `position_reference`.
+    quantity: '?'
+  - name: confirmed_brain_area
+    neurodata_type_inc: VectorData
+    dtype: text
+    doc: The brain area of the actual contact position, e.g., "CA1".
+    quantity: '?'
+  links:
+  - name: probe
+    target_type: Probe
+    doc: The probe that the channels belongs to.
+- neurodata_type_def: ExtracellularSeries
+  neurodata_type_inc: TimeSeries
+  doc: Extracellular recordings from a single probe. Create multiple instances of
+    this class for different probes.
+  datasets:
+  - name: data
+    dtype: numeric
+    dims:
+    - num_times
+    - num_channels
+    shape:
+    - null
+    - null
+    doc: Recorded voltage data.
+    attributes:
+    - name: unit
+      dtype: text
+      value: microvolts
+      doc: Base unit of measurement for working with the data. This value is fixed
+        to 'microvolts'. Actual stored values are not necessarily stored in these
+        units. To access the data in these units, multiply 'data' by 'conversion',
+        followed by 'channel_conversion' (if present), and then add 'offset'.
+  - name: channels
+    neurodata_type_inc: DynamicTableRegion
+    doc: DynamicTableRegion pointer to rows in a ChannelsTable that represent the
+      channels used to collect the data in this recording.
+  - name: channel_conversion
+    dtype: float
+    dims:
+    - num_channels
+    shape:
+    - null
+    doc: Channel-specific conversion factor. Multiply the data in the 'data' dataset
+      by these values along the channel axis (as indicated by axis attribute) AND
+      by the global conversion factor in the 'conversion' attribute of 'data' to get
+      the data values in microvolts, i.e, data in microvolts = data * data.conversion
+      * channel_conversion. This approach allows for both global and per-channel data
+      conversion factors needed to support the storage of electrical recordings as
+      native values generated by data acquisition systems. If this dataset is not
+      present, then there is no channel-specific conversion factor, i.e. it is 1 for
+      all channels.
+    quantity: '?'
+    attributes:
+    - name: axis
+      dtype: int
+      value: 1
+      doc: The zero-indexed axis of the 'data' dataset that the channel-specific conversionfactor
+        applies to. This value is fixed to 1.
